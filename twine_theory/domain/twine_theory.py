@@ -34,10 +34,11 @@ class Trend:
             for t in self.subtrends: val = max(val, t.top)
             return val
         elif attr=='bottom':
-            val = sys.maxszie
+            val = sys.maxsize
             for t in self.subtrends: val = min(val, t.bottom)
             return val
-        
+        elif attr=='perfect':
+            return 
 class CongestedTrend(Trend):
     pass
 
@@ -50,6 +51,11 @@ class OverflowUp:
 class OverflowDown:
     pass
 
+class Bi:
+    def __init__(self):
+        pass
+        
+
 class K:
     def __init__(self, time, startPrice,highPrice, endPrice, lowPrice, volume, level=1):
         self.level = level
@@ -60,4 +66,12 @@ class K:
         self.low = lowPrice
         self.high = highPrice
 
+    def __getattr__(self,attr):
+        if attr=='top': return self.high
+        elif attr=='bottom': return self.low
+
+    def __str__(self):
+        return '"time":"'+self.time+'","low":'+str(self.low)+',"high":'+str(self.high)+',"start":'+str(self.start)+',"end":'+str(self.end)+',"volume":'+str(self.volume)
+
+    
    
