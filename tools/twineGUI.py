@@ -117,7 +117,7 @@ if __name__ == "__main__":
     kks = [];
     for k in ks : kks.append(tt.K(k[0],k[1],k[2],k[3],k[4],k[5]));
     #import pdb; pdb.set_trace()
-    ds.StickWidget(p,kks,fill=False)
+    ds.StickWidget(p,kks)
 
     #uc = norm.NormalizeUseCase(kks)    
     #res = uc.execute()

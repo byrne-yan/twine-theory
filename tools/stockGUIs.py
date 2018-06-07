@@ -1,38 +1,46 @@
 import pyqtgraph as pg
 import numpy as np
 
-STICK_OPTIONS = {
-    'width':2,
+DEFAULT = {
     'gap':1,
+    'width':2,
     'color':'r',
-    'fillColor':'r',
+    'fillColor':'g',
     'lineWidth': 1 #px
 }
-
 class StickWidget():
-    def __init__(self,plot,kSeries,fill=False):
+    def __init__(self,plot,kSeries,style=DEFAULT):
+        self.style = style
         self.baseX = 0        
         coords = np.array([]).reshape(0,2)
         baseX = 0
         for k in kSeries:
-            stick = self.mkStick(k.low,k.high,fill)
+            stick = self.mkStick(k.low,k.high,k.start,k.end)
             for p in stick: plot.addItem(p)
 
 ##        import pdb; pdb.set_trace()
 
-    def mkStick(self,low,high,fill=False):
-        p = pg.mkPen(STICK_OPTIONS['color'],width=STICK_OPTIONS['lineWidth'])
-        b = pg.mkBrush(STICK_OPTIONS['fillColor'])
+    def mkStick(self,low,high,start,end):
+        goingup = False
+        if start < end:
+            goingup = True
+            p = pg.mkPen(self.style['color'],width=self.style['lineWidth'])
+        else:
+            p = pg.mkPen(self.style['fillColor'],width=self.style['lineWidth'])
+            b = pg.mkBrush(self.style['fillColor'])           
+        
 
-        lx = self.baseX + STICK_OPTIONS['gap']
-        rx = self.baseX + STICK_OPTIONS['gap']+STICK_OPTIONS['width']
-        self.baseX += STICK_OPTIONS['gap']+STICK_OPTIONS['width']
+        lx = self.baseX + self.style['gap']
+        mx = self.baseX + self.style['gap'] + self.style['width']/2
+        rx = self.baseX + self.style['gap'] + self.style['width']
+        self.baseX += self.style['gap'] + self.style['width']
 
-        if fill:
-            lb = pg.PlotCurveItem(x=[lx,lx,rx], y=[high,low,low], pen = p ) #leff-bottom half
-            rt = pg.PlotCurveItem(x=[lx,rx,rx], y=[high,high,low], pen =p ) #right-top half
+        if goingup == False:
+            lb = pg.PlotCurveItem(x=[mx,mx,lx,lx,mx], y=[high,start,start,end,end], pen = p ) #leff-bottom half
+            rt = pg.PlotCurveItem(x=[mx,mx,rx,rx,mx], y=[low,end,end,start,start], pen =p ) #right-top half
             fill = pg.FillBetweenItem(lb,rt,brush=b, pen = p)           
             return [lb,rt,fill]
         else:
-            stick = pg.PlotCurveItem(x= [lx,lx,rx,rx,lx], y = [high,low,low,high,high], pen = p)
+            stick = pg.PlotCurveItem(x=  [mx,  mx,  lx,  lx,   mx, mx,   mx,   rx, rx, mx],
+                                     y = [high,end, end, start,start,low,start,start,end,end], pen = p)
             return [stick]
