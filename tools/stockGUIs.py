@@ -5,20 +5,68 @@ DEFAULT = {
     'gap':1,
     'width':2,
     'color':'r',
-    'fillColor':'g',
+    'fillColor':(0,100,0),
     'lineWidth': 1 #px
 }
-class StickWidget():
-    def __init__(self,plot,kSeries,style=DEFAULT):
+
+class StickXAxisItem(pg.AxisItem):
+    def __init__(self,orientation, pen=None, linkView=None, parent=None, maxTickLength=-5, showValues=True):
+        super().__init__(orientation, pen, linkView, parent, maxTickLength, showValues)
+        self.dates = []
+        
+    def setDates(self,dates,span):
+        self.span = span
+        self.dates = dates;
+##    def setTicks(self, ticks):
+##        print("##",ticks)
+##        super().setTicks(ticks)
+
+##    def tickSpacing(self, minVal, maxVal, size):
+##        print("@@",minVal, maxVal, size)
+##        if minVal <0 :
+##            minVal = 0
+##            size += minVal
+##        levels = super().tickSpacing(0, maxVal, size)
+##        print("@@",levels)
+##        return levels
+
+    def tickValues(self, minVal, maxVal, size):
+        if minVal <0 :
+            minVal = 0
+            size += minVal
+        values = super().tickValues(minVal, maxVal, size)
+##        print(values)
+        return  values
+         
+    def tickStrings(self, values, scale, spacing):
+
+        if self.logMode:
+            return self.logTickStrings(values, scale, spacing)
+        
+        strings = []
+        for v in values:
+            vs = int(v * scale/self.span)
+            
+            if vs >= 0 and vs < len(self.dates):                
+                strings.append("{}".format(self.dates[vs]))
+##        print("$$",values,strings)
+        return strings
+    
+class StickWidget(pg.PlotItem):
+    def __init__(self,kSeries,style=DEFAULT):
+        self.dateAxis = StickXAxisItem('bottom')
+        super().__init__(axisItems={'bottom':self.dateAxis})
         self.style = style
         self.baseX = 0        
         coords = np.array([]).reshape(0,2)
         baseX = 0
+        dates = []
         for k in kSeries:
+            dates.append(k.time)
             stick = self.mkStick(k.low,k.high,k.start,k.end)
-            for p in stick: plot.addItem(p)
-
-##        import pdb; pdb.set_trace()
+            for p in stick: self.addItem(p)
+        
+        self.dateAxis.setDates(dates,self.style['gap'] + self.style['width'])
 
     def mkStick(self,low,high,start,end):
         goingup = False

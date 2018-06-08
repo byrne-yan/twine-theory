@@ -16,9 +16,7 @@ if __name__ == "__main__":
     view = pg.GraphicsLayoutWidget()
     w.setCentralWidget(view)
 
-
-    p = view.addPlot()
-
+ 
 
     ks = [
     ('2018/1/2',13.35,13.93,13.7,13.32,2081592.5)
@@ -117,7 +115,10 @@ if __name__ == "__main__":
     kks = [];
     for k in ks : kks.append(tt.K(k[0],k[1],k[2],k[3],k[4],k[5]));
     #import pdb; pdb.set_trace()
-    ds.StickWidget(p,kks)
+
+    view.addItem(ds.StickWidget(kks))
+    view.setBackground('w')
+    
 
     #uc = norm.NormalizeUseCase(kks)    
     #res = uc.execute()
