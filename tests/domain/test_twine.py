@@ -1,5 +1,4 @@
 import sys
-print(sys.path)
 
 from twine_theory.domain import twine_theory as tt
 

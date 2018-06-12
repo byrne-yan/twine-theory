@@ -6,6 +6,7 @@ DEFAULT = {
     'width':2,
     'color':'r',
     'fillColor':(0,100,0),
+    'mergedColor':'g',
     'lineWidth': 1 #px
 }
 
@@ -53,19 +54,39 @@ class StickXAxisItem(pg.AxisItem):
         return strings
     
 class StickWidget(pg.PlotItem):
-    def __init__(self,kSeries,style=DEFAULT):
+    def __init__(self,kseq,style=DEFAULT):
         self.dateAxis = StickXAxisItem('bottom')
         super().__init__(axisItems={'bottom':self.dateAxis})
         self.style = style
         self.baseX = 0        
         coords = np.array([]).reshape(0,2)
-        baseX = 0
         dates = []
-        for k in kSeries:
+        mergedFound = -1
+        baseX = 0
+        for i in range(0,len(kseq.getSeq())):
+            k = kseq.getSeq()[i]
             dates.append(k.time)
+            
             stick = self.mkStick(k.low,k.high,k.start,k.end)
             for p in stick: self.addItem(p)
-        
+            
+            if mergedFound != -1:
+                m = kseq.getSeq()[mergedFound].merged
+                if k.merged != m:
+                    stick = self.mkMergedStick(m.low,m.high,mergedFound*(self.style['gap'] + self.style['width']),mergedFound,i)
+                    for p in stick: self.addItem(p)
+                     
+                if not k.merged:
+                    mergedFound = -1
+                elif k.merged != m:
+                    mergedFound = i
+                    baseX = self.baseX
+                    
+            elif k.merged:
+                mergedFound = i
+                baseX = self.baseX
+##                import pdb;pdb.set_trace()
+                        
         self.dateAxis.setDates(dates,self.style['gap'] + self.style['width'])
 
     def mkStick(self,low,high,start,end):
@@ -92,3 +113,14 @@ class StickWidget(pg.PlotItem):
             stick = pg.PlotCurveItem(x=  [mx,  mx,  lx,  lx,   mx, mx,   mx,   rx, rx, mx],
                                      y = [high,end, end, start,start,low,start,start,end,end], pen = p)
             return [stick]
+        
+    def mkMergedStick(self,low,high,baseX,idxFrom,idxTo):
+        p = pg.mkPen(self.style['mergedColor'],width=self.style['lineWidth']*2,style=pg.QtCore.Qt.DashLine)      
+
+        lx = baseX + self.style['gap']
+        rx = baseX + (self.style['gap']+self.style['width'])*(idxTo-idxFrom)
+
+        stick = pg.PlotCurveItem(x=  [lx,  rx, rx, lx,lx],
+                                     y = [high,high,low,low,high], pen = p)
+        return [stick]        
+        

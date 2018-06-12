@@ -105,7 +105,9 @@ def test_normalize():
         });
     uc = norm.NormalizeUseCase(kks)    
     res = uc.execute()
-    for k in res: print(str(k))
+##    print(len(res),len(kks))
+##    for k in res:
+##        if k.merged: print(vars(k))
     
-    assert len(res)==len(ks)
+    assert len(res) == 65
     

@@ -7,7 +7,7 @@ import pytest
 
 from click.testing import CliRunner
 
-from twine_theory import twine_theory
+#from twine_theory import twine_theory
 from twine_theory import cli
 
 
