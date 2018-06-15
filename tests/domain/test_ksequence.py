@@ -1,4 +1,5 @@
 from twine_theory.domain import twine_theory as twine
+import pandas as pd
 
 def test_kseq_ktype():
     assert 'up'==twine.kseq_type(twine.K('2018-5-24',10,12,12,10,1),\
@@ -52,7 +53,7 @@ def test_kseq_listofdict():
     assert s._seq[4].merged
     assert s._seq[5].merged
     assert not s._seq[6].merged
-    
+
 def test_kseq_listoftuple():
     ks = [
             ('2018/1/2',13.35,13.93,13.7,13.32,2081592.5)
@@ -67,7 +68,25 @@ def test_kseq_listoftuple():
     assert s._seq[0].high == 13.93
     assert s._seq[0].low == 13.32
 
-    
+def test_kseq_dataframe():
+    listDict = [
+                    {'date':'2018/1/2','open':13.35,'high':13.93,'close':13.7,'low':13.32,'volume':2081592.5}
+                    ,{'date':'2018/1/3','open':13.73,'high':13.86,'close':13.33,'low':13.2,'volume':2962498.25}
+                    ,{'date':'2018/1/4','open':13.32,'high':13.37,'close':13.25,'low':13.13,'volume':1854509.5}#
+                    ,{'date':'2018/1/5','open':13.21,'high':13.35,'close':13.3,'low':13.15,'volume':1210312.75}#
+                    ,{'date':'2018/1/8','open':13.25,'high':13.29,'close':12.96,'low':12.86,'volume':2158620.75}
+                    ,{'date':'2018/1/9','open':12.96,'high':13.2,'close':13.08,'low':12.92,'volume':1344345.12}
+                    ,{'date':'2018/1/10','open':13.04,'high':13.49,'close':13.47,'low':12.92,'volume':2403277.5}
+                    ,{'date':'2018/1/11','open':13.41,'high':13.59,'close':13.4,'low':13.27,'volume':1443877.75}
+                    ,{'date':'2018/1/12','open':13.45,'high':13.68,'close':13.55,'low':13.41,'volume':1353991.38}
+                    ,{'date':'2018/1/15','open':13.51,'high':14.33,'close':14.2,'low':13.5,'volume':3122394.5}
+                    ,{'date':'2018/1/16','open':14.17,'high':14.38,'close':14.2,'low':14.02,'volume':2444549}
+                    ,{'date':'2018/1/17','open':14.33,'high':14.8,'close':14.23,'low':14.2,'volume':2656294}
+                ]
+    df = pd.DataFrame(listDict)
+    s = twine.KSeq('day', df)
+    assert len(s._seq) == 12
+
 def test_kseq_merge():
     ks = [
      ('2018/3/21',11.95,12.12,11.9,11.85,1445109.5)

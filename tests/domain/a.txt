@@ -1,0 +1,38 @@
+Timer unit: 3.42091e-07 s
+
+Total time: 0.27576 s
+File: ../..\twine_theory\domain\twine_theory.py
+Function: __init__ at line 119
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+   119                                               def __init__(self, level, klist):
+   120         1          8.0      8.0      0.0          self._level = level
+   121                                           
+   122         1          6.0      6.0      0.0          if type(klist) is not list and type(klist) is not pd.DataFrame:
+   123                                                       raise TypeError()
+   124         1          4.0      4.0      0.0          if type(klist) is list and len(klist) > 0 and (type(klist[0]) is not dict) \
+   125                                                       and (type(klist[0]) is not K) and (type(klist[0]) is not tuple):
+   126                                                       raise TypeError()
+   127                                           
+   128         1          3.0      3.0      0.0          self._seq = []
+   129         1          4.0      4.0      0.0          if type(klist) is pd.DataFrame:
+   130       732     406529.0    555.4     50.4              for i,row in klist.iterrows():
+   131       731     377873.0    516.9     46.9                  self._seq.append(K(row['date'], row['open'], row['high'], row['close'], row['low'], row['volume']))
+   132                                                   else:
+   133                                                       if len(klist) > 0 and type(klist[0]) is dict:
+   134                                                           for k in klist:
+   135                                                               self._seq.append(K(k['time'], k['start'], k['high'], k['end'], k['low'], k['volume']))
+   136                                           
+   137                                                       if len(klist) > 0 and type(klist[0]) is tuple:
+   138                                                           for k in klist:
+   139                                                               self._seq.append(K(k[0], k[1], k[2], k[3], k[4], k[5]))
+   140                                           
+   141         1         29.0     29.0      0.0          self._low = float('+inf')
+   142         1          7.0      7.0      0.0          self._high = float('-inf')
+   143       732       1921.0      2.6      0.2          for k in self._seq:
+   144       731       2364.0      3.2      0.3              if k.low < self._low: self._low = k.low
+   145       731       2450.0      3.4      0.3              if k.high > self._high: self._high = k.high
+   146         1          7.0      7.0      0.0          if len(self._seq):
+   147         1      14897.0  14897.0      1.8              self._normalize()
+
