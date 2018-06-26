@@ -151,6 +151,12 @@ class KSeq:
             if abs(self._norm[n].high - self._seq[i].high) < 0.00000001:
                 return i
 
+    def look4LastMerged(self,n):
+        for i in range(n,0,-1):
+            if self._norm[i].merged:
+                return i
+        return None
+    
     def split2bi(self):
         self._bi = []
 
@@ -186,57 +192,62 @@ class KSeq:
                     })
                     break
                 else:
-                    ++i
-            #
-            while i < len(self._norm):
+                    i += 1
+            #import pdb; pdb.set_trace()
+            while i+2 < len(self._norm):
+                
+                t = kseq_type(self._norm[i],self._norm[i+1],self._norm[i+2])
                 if self._bi[-1]['isUp']:
-                    import pdb;
-                    pdb.set_trace()
-                    ntop = self._nextTop(i-1)
-                    if ntop:
-                        self._bi[-1]['to'] = (ntop,self._norm[ntop].high)
+                    #import pdb; pdb.set_trace()
+                    
+                    if t == 'top' and self._norm[i+1].high >= self._bi[-1]['to'][1]:
+                        self._bi[-1]['to'] = (i+1,self._norm[i+1].high)
+                    elif t == 'bottom' and i+1- self._bi[-1]['to'][0] > 3:
                         self._bi[-1]['growing'] = False
                         self._bi.append({
-                            'from': (ntop, self._norm[ntop].high),
-                            'to':(ntop+4 ,self._norm[ntop+4].low),
+                            'from': self._bi[-1]['to'],
+                            'to': (i+1, self._norm[i+1].low),
                             'isUp': False,
                             'growing': True
                         })
-                        i = ntop + 2
-                    else:
-                        break
-                else:
-                    import pdb;
-                    pdb.set_trace()
-                    nbottom = self._nextBottom(i-1)
-                    if nbottom:
-                        self._bi[-1]['to'] = (nbottom,self._norm[nbottom].low)
+                else:                    
+                    #import pdb; pdb.set_trace()
+                    if t == 'bottom' and self._norm[i+1].low <= self._bi[-1]['to'][1]:
+                        self._bi[-1]['to'] = (i+1,self._norm[i+1].low)
+                    elif t == 'top' and i+1- self._bi[-1]['to'][0] > 3:
+                        #import pdb; pdb.set_trace()
                         self._bi[-1]['growing'] = False
                         self._bi.append({
-                            'from': (nbottom, self._norm[nbottom].low),
-                            'to': (nbottom+4 ,self._norm[nbottom+4].high),
+                            'from': self._bi[-1]['to'],
+                            'to': (i+1, self._norm[i+1].high),
                             'isUp': True,
                             'growing': True
                         })
-                        i = nbottom + 2
-                    else:
-                        break
+                i = i + 1
 
             #map index in _norm into index in _seq
-            sumidx = 0
-            for b in self._bi:
-                if self._norm[b['from'][0]].merged:
-                    if b['isUp']:
-                        b['from'] = (self.getRealLowestK(b['from'][0]),b['from'][1])
-                    else:
-                        b['from'] = (self.getRealHighestK(b['from'][0]),b['from'][1])
-
+            for i in range(0,len(self._bi)):
+                b = self._bi[i]
+                if i ==0:
+                    if self._norm[b['from'][0]].merged : #
+                        if b['isUp']:
+                            b['from'] = (self.getRealLowestK(b['from'][0]),b['from'][1])
+                        else:
+                            b['from'] = (self.getRealHighestK(b['from'][0]),b['from'][1])
+                        
+                else:
+                    b['from'] = self._bi[i-1]['to']
+                    
                 if self._norm[b['to'][0]].merged:
-
                     if b['isUp']:
                         b['to'] = (self.getRealHighestK(b['to'][0]),b['to'][1])
                     else:
                         b['to'] = (self.getRealLowestK(b['to'][0]),b['to'][1])
+                else:
+                    last = self.look4LastMerged(b['to'][0])
+                    if last:
+                        delta = b['to'][0] - last                        
+                        b['to'] = (self._norm[last].ingredient[-1] + delta, b['to'][1])
 
 def kseq_type(k1, k2, k3):
     if k1.low <= k2.low and k1.high <= k2.high and \

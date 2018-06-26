@@ -58,6 +58,7 @@ class StickXAxisItem(pg.AxisItem):
 
 class StickWidget(pg.PlotItem):
     def __init__(self, kseq, style=DEFAULT):
+        print("Construting Widget...")
         self.dateAxis = StickXAxisItem('bottom')
         super().__init__(axisItems={'bottom': self.dateAxis})
         self.style = style
@@ -129,13 +130,14 @@ class StickWidget(pg.PlotItem):
         return [stick]
 
     def mkBiCurve(self,kseq):
+        #import pdb;pdb.set_trace()
         p = pg.mkPen(self.style['biColor'], width=self.style['lineWidth'])
 
         x = [kseq._bi[0]['from'][0]*(self.style['gap']+self.style['width'])+self.style['gap']+self.style['width']/2]
         y = [kseq._bi[0]['from'][1]]
-        for i in range(1,len(kseq._bi)):
+        for i in range(0,len(kseq._bi)):
             x.append(kseq._bi[i]['to'][0]*(self.style['gap']+self.style['width'])+self.style['gap']+self.style['width']/2)
             y.append(kseq._bi[i]['to'][1])
 
-        # import pdb;pdb.set_trace()
+       
         return pg.PlotCurveItem(x, y, pen=p)
