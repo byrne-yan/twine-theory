@@ -8,7 +8,13 @@ DEFAULT = {
     'fillColor': (0, 100, 0),
     'mergedColor': 'g',
     'lineWidth': 1,  # px
-    'biColor':'b'
+    'biColor':'b',
+    'segmentColor':'r',
+    'showStick':False,
+    'showMerge':False,
+    'showBi':True,
+    'showSegment':True,
+    'showTwine':True
 }
 
 class StickXAxisItem(pg.AxisItem):
@@ -62,37 +68,45 @@ class StickWidget(pg.PlotItem):
         self.dateAxis = StickXAxisItem('bottom')
         super().__init__(axisItems={'bottom': self.dateAxis})
         self.style = style
-        self.baseX = 0
-        coords = np.array([]).reshape(0, 2)
         dates = []
-        mergedFound = -1
-        baseX = 0
-        for i in range(0, len(kseq.getSeq())):
-            k = kseq.getSeq()[i]
-            dates.append(k.time)
+        if True:
+            self.baseX = 0
+            coords = np.array([]).reshape(0, 2)
+            mergedFound = -1
+            baseX = 0
+            for i in range(0, len(kseq.getSeq())):
+                k = kseq.getSeq()[i]
+                dates.append(k.time)
 
-            stick = self.mkStick(k.low, k.high, k.start, k.end)
-            for p in stick: self.addItem(p)
-
-            if mergedFound != -1:
-                m = kseq.getSeq()[mergedFound].merged
-                if k.merged != m:
-                    stick = self.mkMergedStick(m.low, m.high, mergedFound * (self.style['gap'] + self.style['width']),
-                                               mergedFound, i)
+                if self.style['showStick']:
+                    stick = self.mkStick(k.low, k.high, k.start, k.end)
                     for p in stick: self.addItem(p)
 
-                if not k.merged:
-                    mergedFound = -1
-                elif k.merged != m:
-                    mergedFound = i
-                    baseX = self.baseX
+                if self.style['showMerge']:
+                    if mergedFound != -1:
+                        m = kseq.getSeq()[mergedFound].merged
+                        if k.merged != m:
+                            stick = self.mkMergedStick(m.low, m.high, mergedFound * (self.style['gap'] + self.style['width']),
+                                                       mergedFound, i)
+                            for p in stick: self.addItem(p)
 
-            elif k.merged:
-                mergedFound = i
-                baseX = self.baseX
+                        if not k.merged:
+                            mergedFound = -1
+                        elif k.merged != m:
+                            mergedFound = i
+                            baseX = self.baseX
 
-        self.addItem(self.mkBiCurve(kseq))
+                    elif k.merged:
+                        mergedFound = i
+                        baseX = self.baseX
 
+        if self.style['showBi']:
+            self.addItem(self.mkBiCurve(kseq))
+
+        if self.style['showSegment']:
+            for p in self.mkSegmentCurve(kseq):
+                self.addItem(p)
+            
         self.dateAxis.setDates(dates, self.style['gap'] + self.style['width'])
 
     def mkStick(self, low, high, start, end):
@@ -141,3 +155,30 @@ class StickWidget(pg.PlotItem):
 
        
         return pg.PlotCurveItem(x, y, pen=p)
+
+    def mkSegmentCurve(self,kseq):
+        p1 = pg.mkPen(self.style['segmentColor'], width=self.style['lineWidth'])
+        p2 = pg.mkPen(self.style['segmentColor'], width=self.style['lineWidth'], style=pg.QtCore.Qt.DashLine)
+
+        x = [kseq._segment[0]['from'][0]*(self.style['gap']+self.style['width'])+self.style['gap']+self.style['width']/2]
+        y = [kseq._segment[0]['from'][1]]
+        for i in range(0,len(kseq._segment)-1):
+            x.append(kseq._segment[i]['to'][0]*(self.style['gap']+self.style['width'])+self.style['gap']+self.style['width']/2)
+            y.append(kseq._segment[i]['to'][1])
+        if kseq._segment[-1]['growing']:
+            if 1 == len(kseq._segment):
+                x2 = [kseq._segment[-1]['from'][0]*(self.style['gap']+self.style['width'])+self.style['gap']+self.style['width']/2,
+                      kseq._segment[-1]['to'][0]*(self.style['gap']+self.style['width'])+self.style['gap']+self.style['width']/2]
+                y2 = [kseq._segment[-1]['from'][1],kseq._segment[-1]['to'][1]]
+                return [pg.PlotCurveItem(x2, y2, pen=p2)]
+            else:
+                x2 = [kseq._segment[-2]['to'][0]*(self.style['gap']+self.style['width'])+self.style['gap']+self.style['width']/2,
+                      kseq._segment[-1]['to'][0]*(self.style['gap']+self.style['width'])+self.style['gap']+self.style['width']/2]
+                y2 = [kseq._segment[-2]['to'][1],kseq._segment[-1]['to'][1]]
+                return [pg.PlotCurveItem(x, y, pen=p1),pg.PlotCurveItem(x2, y2, pen=p2)]
+        else:
+            x.append(kseq._segment[-1]['to'][0]*(self.style['gap']+self.style['width'])+self.style['gap']+self.style['width']/2)
+            y.append(kseq._segment[-1]['to'][1])
+            
+       
+        return [pg.PlotCurveItem(x, y, pen=p1)]

@@ -69,6 +69,8 @@ class KSeq:
         if len(self._seq):
             self._normalize()
         self.split2bi()
+        self.makeupSegment()
+        #import pdb;pdb.set_trace()
 
     def addK(self, k):
         self._seq.append(k)
@@ -194,8 +196,7 @@ class KSeq:
                 else:
                     i += 1
             #import pdb; pdb.set_trace()
-            while i+2 < len(self._norm):
-                
+            while i+2 < len(self._norm):                
                 t = kseq_type(self._norm[i],self._norm[i+1],self._norm[i+2])
                 if self._bi[-1]['isUp']:
                     #import pdb; pdb.set_trace()
@@ -248,6 +249,188 @@ class KSeq:
                     if last:
                         delta = b['to'][0] - last                        
                         b['to'] = (self._norm[last].ingredient[-1] + delta, b['to'][1])
+    def makeupSegment(self):
+        self._segment = []
+        if len(self._bi) > 2:
+            a = self.searchFirstSeg(0)
+            if not a:
+                a = self.searchFirstSeg(1)
+            if a:
+                self._segment.append({
+                    'from':(self._bi[a['from']]['from'][0],self._bi[a['from']]['from'][1]),
+                    'to':(self._bi[a['to']]['to'][0],self._bi[a['to']]['to'][1]),
+                    'isUp': self._bi[a['from']]['isUp'],
+                    'bi':[k for k in range(a['from'],a['to']+1)],
+                    'growing':True
+                    })
+            #import pdb; pdb.set_trace()
+            i = self._segment[-1]['bi'][-1]
+            while i + 3 < len(self._bi):
+                
+                if self._segment[-1]['isUp']:
+                    #looking for top
+                    top = self.searchTopSeg(i-1)
+                    if top:
+                        self._segment[-1]['to'] = self._bi[top['biIndex']-1]
+                        self._segment[-1]['bi'] += [k for k in range(i+1,top['biIndex'])]
+                        if top['simple']:
+                            self._segment[-1]['growing'] = False
+                            #A new segement was born
+                            self._segment.append({
+                                    'from': self._bi[top['biIndex']]['from'],
+                                    'to': self._bi[top['biIndex']+2]['to'],
+                                    'isUp': False,
+                                    'bi':[k for k in range(top['biIndex'],top['biIndex']+2)],
+                                    'growing':True                            
+                                })
+                            i = top['biIndex'] + 2 
+                        else:                            
+                            #looking for bottom
+                            bottom = self.searchBottomSeg(top['biIndex']+1)
+                            if bottom: #growing segment is dead
+                                self._segment[-1]['growing'] = False
+                                #A new segement was born
+                                self._segment.append({
+                                        'from': self._bi[top['biIndex']]['from'],
+                                        'to': self._bi[bottom['biIndex']-1]['to'],
+                                        'isUp': False,
+                                        'bi':[k for k in range(top['biIndex'],bottom['biIndex'])],
+                                        'growing':True                            
+                                    })
+                            i = bottom['biIndex'] + 2
+                    else:
+                        break
+                else:#down
+                    #looking for bottom
+                    bottom = self.searchBottomSeg(i-1)
+                    if bottom:
+                        
+                        self._segment[-1]['to'] = self._bi[bottom['biIndex']]['from']
+                        self._segment[-1]['bi'] += [k for k in range(i+1,bottom['biIndex'])]
+                        if bottom['simple']:
+                            self._segment[-1]['growing'] = False
+                            #A new segment was born
+                            self._segment.append({
+                                    'from': self._bi[bottom['biIndex']]['from'],
+                                    'to': self._bi[bottom['biIndex']+2]['to'],
+                                    'isUp': True,
+                                    'bi':[k for k in range(bottom['biIndex'],bottom['biIndex']+2)],
+                                    'growing':True                            
+                                })
+                            i += bottom['biIndex'] + 2
+                        else:
+                            top = self.searchTopSeg(bottom['biIndex']+1)
+                            if top: #the segment is dead
+                                self._segment[-1]['growing'] = False
+                                #A new segment was born
+                                self._segment.append({
+                                        'from': self._bi[top['biIndex']]['from'],
+                                        'to': self._bi[top['biIndex']]['to'],
+                                        'isUp': True,
+                                        'bi':[k for k in range(bottom['biIndex'],top['biIndex'])],
+                                        'growing':True                            
+                                    })
+                                i = top['biIndex'] + 2
+                            else:
+                                break
+                    else:
+                        break
+                    
+    def searchBottomSeg(self,start):
+        assert(start<len(self._bi) and self._bi[start]['isUp'])
+        prev = {'biIndex':start,'to':self._bi[start]['to'][1],'from':self._bi[start]['from'][1]}
+        current = None
+        i = start + 2;
+        while i < len(self._bi):
+            val = current
+            if not val: val = prev
+            
+            t = biseq_dir(val['from'],val['to'],self._bi[i]['from'][1],self._bi[i]['to'][1])
+            if t == 'inclusion':
+                val['from'] = min(val['from'],self._bi[i]['from'][1])
+                val['to'] = min(val['to'],self._bi[i]['to'][1])
+                i += 2
+                continue
+            else:
+                if not current:
+                    current = {'biIndex':i,'to':self._bi[i]['to'][1],'from':self._bi[i]['from'][1]}
+                    i += 2
+                    continue
+                #evaluate type
+                if current['from'] < prev['from'] and current['from'] < self._bi[i]['from'][1]:#bottom
+                    return {'biIndex':current['biIndex'], 'simple': current['to'] >= prev['from']}
+                prev = current
+                current = {'biIndex':i,'from':self._bi[i]['from'][1],'to':self._bi[i]['to'][1]}
+                i += 2
+                
+    def searchTopSeg(self,start):
+        assert(start<len(self._bi) and self._bi[start]['isUp']==False)
+        prev = {'biIndex':start,'to':self._bi[start]['to'][1],'from':self._bi[start]['from'][1]}
+        current = None
+        i = start + 2;
+        while i < len(self._bi):
+            val = current
+            if not val: val = prev
+            
+            t = biseq_dir(val['from'],val['to'],self._bi[i]['from'][1],self._bi[i]['to'][1])
+            if t == 'inclusion':
+                val['from'] = max(val['from'],self._bi[i]['from'][1])
+                val['to'] = max(val['to'],self._bi[i]['to'][1])
+                i += 2
+                continue
+            else:
+                if not current:
+                    current = {'biIndex':i,'to':self._bi[i]['to'][1],'from':self._bi[i]['from'][1]}
+                    i += 2
+                    continue
+
+                #evaluate type
+                if current['to'] > prev['to'] and current['to'] > self._bi[i]['to'][1]:#top
+                    return {'biIndex':current['biIndex'], 'simple':current['to'] <= prev['from']}
+                prev = current
+                current = {'biIndex':i,'from':self._bi[i]['from'][1],'to':self._bi[i]['to'][1]}
+                i += 2
+    def searchFirstSeg(self,start):
+        first = {'biIndex':start,'to':self._bi[start]['to'][1],'from':self._bi[start]['from'][1]}
+        base = first['from']
+        isUp = self._bi[start]['isUp']
+        i = start + 2;
+        while i < len(self._bi):            
+            t = biseq_dir(first['from'],first['to'],self._bi[i]['from'][1],self._bi[i]['to'][1])
+            if t == 'inclusion':
+                if isUp:
+                    if self._bi[i]['from'][1] > first['from']:
+                        first['from'] = self._bi[i]['from'][1]
+                    if self._bi[i]['to'][1] > first['to']:
+                        first['to'] = self._bi[i]['to'][1]
+                        first['biIndex'] = i
+                else:
+                    if self._bi[i]['from'][1] < first['from']:
+                        first['from'] = self._bi[i]['from'][1]
+                    if self._bi[i]['to'][1] < first['to']:
+                        first['to'] = self._bi[i]['to'][1]
+                        first['biIndex'] = i
+                i += 2
+                continue
+            if isUp:
+                if self._bi[i]['from'][1] > first['from'] and self._bi[i]['to'][1] > first['to']:
+                    return {'from':first['biIndex'],'to':i}
+                elif self._bi[i]['to'][1] < base:
+                    break;
+
+            else:
+                if self._bi[i]['from'][1] < first['from'] and self._bi[i]['to'][1] < first['to']:
+                    return {'from':first['biIndex'],'to':i}
+                elif self._bi[i]['to'][1] > base:
+                    break
+            i += 2
+        
+def biseq_dir(n1,n2,n3,n4):
+    if n1 > n3 and n2 > n4:
+        return 'down'
+    elif n1 < n3 and n2 < n4:
+        return 'up'
+    return 'inclusion'
 
 def kseq_type(k1, k2, k3):
     if k1.low <= k2.low and k1.high <= k2.high and \
@@ -323,6 +506,3 @@ class OverflowDown:
     pass
 
 
-class Bi:
-    def __init__(self):
-        pass
