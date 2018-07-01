@@ -266,12 +266,12 @@ class KSeq:
                 
                 if self._segment[-1]['isUp']:
                     #looking for top
-                    #import pdb; pdb.set_trace()
+##                    import pdb; pdb.set_trace()
                     top = self.searchTopSeg(i-1)
                     if top:
-                        self._segment[-1]['to'] = self._bi[top['biIndex']-1]['to']
-                        self._segment[-1]['bi'] += [k for k in range(i+1,top['biIndex'])]
-                        if top['category']=='simple':
+                        if top['mode']=='normal':
+                            self._segment[-1]['to'] = self._bi[top['biIndex']-1]['to']
+                            self._segment[-1]['bi'] += [k for k in range(i+1,top['biIndex'])]
                             self._segment[-1]['growing'] = False
                             #A new segement was born
                             self._segment.append({
@@ -282,7 +282,7 @@ class KSeq:
                                     'growing':True                            
                                 })
                             i = top['biIndex'] + 2 
-                        elif top['category']=='normal':
+                        elif top['mode']=='quekou':
                             #looking for bottom
                             bottom = self.searchBottomSeg(top['biIndex']+1)
                             if bottom: #growing segment is dead
@@ -295,8 +295,11 @@ class KSeq:
                                         'bi':[k for k in range(top['biIndex'],bottom['biIndex'])],
                                         'growing':True                            
                                     })
-                            i = bottom['biIndex'] + 2
+                                i = bottom['biIndex'] + 2
                         else:
+                            self._segment[-1]['to'] = self._bi[top['biIndexEnd']]['to']
+                            self._segment[-1]['bi'] += [k for k in range(i+1,top['biIndexEnd']+1)]
+
                             break
                     else:
                         break
@@ -359,7 +362,7 @@ class KSeq:
                     continue
                 #evaluate type
                 if current['from'] < prev['from'] and current['from'] < self._bi[i]['from'][1]:#bottom
-                    return {'biIndex':current['biIndex'], 'simple': current['to'] >= prev['from']}
+                    return {'biIndex':current['biIndex'], 'mode': 'quekou'if current['to'] >= prev['from'] else 'normal'}
                 prev = current
                 current = {'biIndex':i,'from':self._bi[i]['from'][1],'to':self._bi[i]['to'][1]}
                 i += 2
@@ -372,6 +375,9 @@ class KSeq:
         while i < len(self._bi):
             val = current
             if not val: val = prev
+
+            if i+2 == len(self._bi) and self._bi[i+1]['to'][1] > prev['from']:
+                return {'biIndex':prev['biIndex'], 'biIndexEnd':i+1,'mode':"newpeak"}
             
             t = biseq_dir(val['from'],val['to'],self._bi[i]['from'][1],self._bi[i]['to'][1])
             if t == 'inclusion':
@@ -382,13 +388,17 @@ class KSeq:
                     continue
                 else:
                     to = self.checkFirstSeg(i)
-                    #import pdb; pdb.set_trace()
+                    
                     if to:
-                        return {'biIndex':i, 'biIndexEnd':to,'category':"normal"}
+                        return {'biIndex':i, 'biIndexEnd':to,'mode':"normal"}
                     else: # new high
-                        return {'biIndex':i, 'biIndexEnd':i,'category':"new"}
-                    i += 2
+                        prev = {'biIndex':i,'to':self._bi[i]['to'][1],'from':self._bi[i]['from'][1]}
+                        current = None
+                        if i+2 == len(self._bi) and self._bi[i+1]['to'][1] > prev['from']:
+                            return {'biIndex':i, 'biIndexEnd':i,'mode':"newpeak"}
+                        i += 2
             else:
+##                import pdb; pdb.set_trace()
                 if not current:
                     current = {'biIndex':i,'to':self._bi[i]['to'][1],'from':self._bi[i]['from'][1]}
                     i += 2
@@ -396,7 +406,7 @@ class KSeq:
 
                 #evaluate type
                 if current['to'] > prev['to'] and current['to'] > self._bi[i]['to'][1]:#top
-                    return {'biIndex':current['biIndex'],'biIndexEnd':i, 'mode': 'quekou' if current['to'] <= prev['from'] else 'normal'}
+                    return {'biIndex':current['biIndex'],'biIndexEnd':i, 'mode': 'quekou' if current['to'] > prev['from'] else 'normal'}
                 prev = current
                 current = {'biIndex':i,'from':self._bi[i]['from'][1],'to':self._bi[i]['to'][1]}
                 i += 2
