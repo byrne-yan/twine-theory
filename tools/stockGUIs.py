@@ -157,28 +157,30 @@ class StickWidget(pg.PlotItem):
         return pg.PlotCurveItem(x, y, pen=p)
 
     def mkSegmentCurve(self,kseq):
-        p1 = pg.mkPen(self.style['segmentColor'], width=self.style['lineWidth'])
-        p2 = pg.mkPen(self.style['segmentColor'], width=self.style['lineWidth'], style=pg.QtCore.Qt.DashLine)
+        if kseq._segment and len(kseq._segment):
+            p1 = pg.mkPen(self.style['segmentColor'], width=self.style['lineWidth'])
+            p2 = pg.mkPen(self.style['segmentColor'], width=self.style['lineWidth'], style=pg.QtCore.Qt.DashLine)
 
-        x = [kseq._segment[0]['from'][0]*(self.style['gap']+self.style['width'])+self.style['gap']+self.style['width']/2]
-        y = [kseq._segment[0]['from'][1]]
-        for i in range(0,len(kseq._segment)-1):
-            x.append(kseq._segment[i]['to'][0]*(self.style['gap']+self.style['width'])+self.style['gap']+self.style['width']/2)
-            y.append(kseq._segment[i]['to'][1])
-        if kseq._segment[-1]['growing']:
-            if 1 == len(kseq._segment):
-                x2 = [kseq._segment[-1]['from'][0]*(self.style['gap']+self.style['width'])+self.style['gap']+self.style['width']/2,
-                      kseq._segment[-1]['to'][0]*(self.style['gap']+self.style['width'])+self.style['gap']+self.style['width']/2]
-                y2 = [kseq._segment[-1]['from'][1],kseq._segment[-1]['to'][1]]
-                return [pg.PlotCurveItem(x2, y2, pen=p2)]
+            x = [kseq._segment[0]['from'][0]*(self.style['gap']+self.style['width'])+self.style['gap']+self.style['width']/2]
+            y = [kseq._segment[0]['from'][1]]
+            for i in range(0,len(kseq._segment)-1):
+                x.append(kseq._segment[i]['to'][0]*(self.style['gap']+self.style['width'])+self.style['gap']+self.style['width']/2)
+                y.append(kseq._segment[i]['to'][1])
+            if kseq._segment[-1]['growing']:
+                if 1 == len(kseq._segment):
+                    x2 = [kseq._segment[-1]['from'][0]*(self.style['gap']+self.style['width'])+self.style['gap']+self.style['width']/2,
+                          kseq._segment[-1]['to'][0]*(self.style['gap']+self.style['width'])+self.style['gap']+self.style['width']/2]
+                    y2 = [kseq._segment[-1]['from'][1],kseq._segment[-1]['to'][1]]
+                    return [pg.PlotCurveItem(x2, y2, pen=p2)]
+                else:
+                    x2 = [kseq._segment[-2]['to'][0]*(self.style['gap']+self.style['width'])+self.style['gap']+self.style['width']/2,
+                          kseq._segment[-1]['to'][0]*(self.style['gap']+self.style['width'])+self.style['gap']+self.style['width']/2]
+                    y2 = [kseq._segment[-2]['to'][1],kseq._segment[-1]['to'][1]]
+                    return [pg.PlotCurveItem(x, y, pen=p1),pg.PlotCurveItem(x2, y2, pen=p2)]
             else:
-                x2 = [kseq._segment[-2]['to'][0]*(self.style['gap']+self.style['width'])+self.style['gap']+self.style['width']/2,
-                      kseq._segment[-1]['to'][0]*(self.style['gap']+self.style['width'])+self.style['gap']+self.style['width']/2]
-                y2 = [kseq._segment[-2]['to'][1],kseq._segment[-1]['to'][1]]
-                return [pg.PlotCurveItem(x, y, pen=p1),pg.PlotCurveItem(x2, y2, pen=p2)]
-        else:
-            x.append(kseq._segment[-1]['to'][0]*(self.style['gap']+self.style['width'])+self.style['gap']+self.style['width']/2)
-            y.append(kseq._segment[-1]['to'][1])
-            
-       
-        return [pg.PlotCurveItem(x, y, pen=p1)]
+                x.append(kseq._segment[-1]['to'][0]*(self.style['gap']+self.style['width'])+self.style['gap']+self.style['width']/2)
+                y.append(kseq._segment[-1]['to'][1])
+                
+           
+            return [pg.PlotCurveItem(x, y, pen=p1)]
+        return []

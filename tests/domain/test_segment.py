@@ -320,11 +320,11 @@ def test_seg_split_e():
         {'from':(3,9),'to':(4,6),'isUp':False,'growing':False},
         {'from':(4,6),'to':(5,7),'isUp':True,'growing':False},
         {'from':(5,7),'to':(6,5),'isUp':False,'growing':False},
-        {'from':(6,5),'to':(7,12),'isUp':False,'growing':False},
+        {'from':(6,5),'to':(7,12),'isUp':True,'growing':False},
         {'from':(7,12),'to':(8,9),'isUp':False,'growing':False},
-        {'from':(8,9),'to':(9,11),'isUp':False,'growing':False},
+        {'from':(8,9),'to':(9,11),'isUp':True,'growing':False},
         {'from':(9,11),'to':(10,8),'isUp':False,'growing':False},
-        {'from':(10,8),'to':(11,10),'isUp':False,'growing':False},
+        {'from':(10,8),'to':(11,10),'isUp':True,'growing':False},
         {'from':(11,10),'to':(12,7),'isUp':False,'growing':False}
         
         ]
@@ -348,7 +348,7 @@ def test_seg_split_e():
     assert(s._segment[2] == {
         'from': (6,5),
         'to': (10,11),
-        'isUp': False,
+        'isUp': True,
         'bi': [6,7,8],
         'growing':True
         })
@@ -383,9 +383,9 @@ def test_seg_split_f():
         {'from':(3,9),'to':(4,6),'isUp':False,'growing':False},
         {'from':(4,6),'to':(5,7),'isUp':True,'growing':False},
         {'from':(5,7),'to':(6,5),'isUp':False,'growing':False},
-        {'from':(6,5),'to':(7,10),'isUp':False,'growing':False},
+        {'from':(6,5),'to':(7,10),'isUp':True,'growing':False},
         {'from':(7,10),'to':(8,6),'isUp':False,'growing':False},
-        {'from':(8,6),'to':(9,11),'isUp':False,'growing':False}        
+        {'from':(8,6),'to':(9,11),'isUp':True,'growing':False}        
         ]
     s.makeupSegment()
     
@@ -407,7 +407,7 @@ def test_seg_split_f():
     assert(s._segment[2] == {
         'from': (6,5),
         'to': (9,11),
-        'isUp': False,
+        'isUp': True,
         'bi': [6,7,8],
         'growing':True
         })
