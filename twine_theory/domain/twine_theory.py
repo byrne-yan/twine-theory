@@ -338,7 +338,7 @@ class KSeq:
                                     'bi':[k for k in range(bottom['biIndex'],bottom['biIndex']+3)],
                                     'growing':True                            
                                 })
-                            i += bottom['biIndex'] + 2
+                            i = bottom['biIndexEnd']
                         elif bottom['mode'] == 'quekou':
 ##                            import pdb; pdb.set_trace()
                             top = self.searchTopSeg(bottom['biIndex']+1)
@@ -381,35 +381,31 @@ class KSeq:
             val = current
             if not val: val = prev
             
-##            if i+2 == len(self._bi) and self._bi[i+1]['to'][1] < prev['from']:
-##                return {'biIndex':prev['biIndex'], 'biIndexEnd':i+1,'mode':"newpeak"}
-
             t = biseq_dir(val['from'],val['to'],self._bi[i]['from'][1],self._bi[i]['to'][1])
             if t == 'inclusion':
-                if self._bi[i]['from'][1] > self._bi[i-2]['from'][1]:#included by left
+                if self._bi[i]['from'][1] > prev['from']:#included by left
                     val['from'] = min(val['from'],self._bi[i]['from'][1])
                     val['to'] = min(val['to'],self._bi[i]['to'][1])
                     i += 2
                     continue
                 else: #included by right
-##                    #check if previous segment is broken by next bi
-##                    if self._bi[i]['to'][1] > self._segment[-1]['from']:
-##                        to = self.checkFirstSeg(i)                    
-##                        if to:
-##                            return {'biIndex':i, 'biIndexEnd':i,'mode':"newpeak"}
-                    to = self.checkFirstSeg(i)                    
-                    if to:
-                        if not quekou:
-                            return {'biIndex':i, 'biIndexEnd':to,'mode':"normal"}
-                        else:
-                            if self._bi[to]['to'] > self._segment[-1]['to'] and self._bi[i-1]['to'][1] > quekou :#previous segment continue
-                                return {'biIndex':i, 'biIndexEnd':to,'mode':"newpeak"}
-                    else: # new high
-                            prev = {'biIndex':i,'to':self._bi[i]['to'][1],'from':self._bi[i]['from'][1]}
-                            current = None
-                            if i+2 == len(self._bi) and self._bi[i+1]['to'][1] < prev['from']:
-                                return {'biIndex':i, 'biIndexEnd':i,'mode':"newpeak"}
-                            i += 2
+                    if not quekou and self._bi[i]['to'][1] > self._segment[-1]['from'][1] and \
+                       i+2 < len(self._bi) and self._bi[i+2]['to'][1] > self._segment[-1]['from'][1]:
+                        return {'biIndex':i, 'biIndexEnd':i+2,'mode':"normal"}
+                    else:
+                        to = self.checkFirstSeg(i)                    
+                        if to:
+                            if not quekou:
+                                return {'biIndex':i, 'biIndexEnd':to,'mode':"normal"}
+                            else:
+                                if self._bi[to]['to'] > self._segment[-1]['to'] and self._bi[i-1]['to'][1] > quekou :#previous segment continue
+                                    return {'biIndex':i, 'biIndexEnd':to,'mode':"newpeak"}
+                        else: # new high
+                                prev = {'biIndex':i,'to':self._bi[i]['to'][1],'from':self._bi[i]['from'][1]}
+                                current = None
+                                if i+2 == len(self._bi) and self._bi[i+1]['to'][1] < prev['from']:
+                                    return {'biIndex':i, 'biIndexEnd':i,'mode':"newpeak"}
+                                i += 2
             else:
                 if not current:
                     current = {'biIndex':i,'to':self._bi[i]['to'][1],'from':self._bi[i]['from'][1]}
@@ -467,6 +463,11 @@ class KSeq:
                 if current['to'] > prev['to'] and current['to'] > self._bi[i]['to'][1] \
                       and current['from'] > prev['from'] and current['from'] > self._bi[i]['from'][1]:#top
                     return {'biIndex':current['biIndex'],'biIndexEnd':i, 'mode': 'quekou' if current['to'] > prev['from'] else 'normal'}
+                elif 'down' == biseq_dir(prev['from'],prev['to'],current['from'],current['to']):#special case
+                    to = self.checkFirstSeg(start+2)
+                    if to:
+                        return {'biIndex':start + 2, 'biIndexEnd':to,'mode':"normal"}
+                    
                 prev = current
                 current = {'biIndex':i,'from':self._bi[i]['from'][1],'to':self._bi[i]['to'][1]}
                 i += 2

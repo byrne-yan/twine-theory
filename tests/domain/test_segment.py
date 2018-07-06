@@ -407,46 +407,46 @@ def test_seg_split_qk_d():
         'bi': [0,1,2],
         'growing':True
         })
-#standard situation a2
-
-##             9 
-##             /\
-##            /  \   
-##        6  /    \  
-##        /\/      \ 
-##       / 5        \     4
-##      /            \    /\
-##     /              \  /  \
-##    3                \/    \
-##                     2      \
-##                            1    
-def test_seg_split_a2():
-    s = twine.KSeq('day',[])
-    s._bi = [
-        {'from':(0,3),'to':(1,6),'isUp':True,'growing':False},
-        {'from':(1,6),'to':(2,5),'isUp':False,'growing':False},
-        {'from':(2,5),'to':(3,9),'isUp':True,'growing':False},
-        {'from':(3,9),'to':(4,2),'isUp':False,'growing':False},
-        {'from':(4,2),'to':(5,4),'isUp':True,'growing':False},
-        {'from':(5,4),'to':(6,1),'isUp':False,'growing':False}
-        ]
-    s.makeupSegment()
-    
-    assert(2 == len(s._segment))
-    assert(s._segment[0] == {
-        'from': (0,3),
-        'to': (3,9),
-        'isUp': True,
-        'bi': [0,1,2],
-        'growing':False
-        })
-    assert(s._segment[1] == {
-        'from': (3,9),
-        'to': (6,1),
-        'isUp': False,
-        'bi': [3,4,5],
-        'growing':True
-        })
+###standard situation a2
+##
+####             9 
+####             /\
+####            /  \   
+####        6  /    \  
+####        /\/      \ 
+####       / 5        \     4
+####      /            \    /\
+####     /              \  /  \
+####    3                \/    \
+####                     2      \
+####                            1    
+##def test_seg_split_a2():
+##    s = twine.KSeq('day',[])
+##    s._bi = [
+##        {'from':(0,3),'to':(1,6),'isUp':True,'growing':False},
+##        {'from':(1,6),'to':(2,5),'isUp':False,'growing':False},
+##        {'from':(2,5),'to':(3,9),'isUp':True,'growing':False},
+##        {'from':(3,9),'to':(4,2),'isUp':False,'growing':False},
+##        {'from':(4,2),'to':(5,4),'isUp':True,'growing':False},
+##        {'from':(5,4),'to':(6,1),'isUp':False,'growing':False}
+##        ]
+##    s.makeupSegment()
+##    
+##    assert(2 == len(s._segment))
+##    assert(s._segment[0] == {
+##        'from': (0,3),
+##        'to': (3,9),
+##        'isUp': True,
+##        'bi': [0,1,2],
+##        'growing':False
+##        })
+##    assert(s._segment[1] == {
+##        'from': (3,9),
+##        'to': (6,1),
+##        'isUp': False,
+##        'bi': [3,4,5],
+##        'growing':True
+##        })
 
 #standard situation e
 ##                               12
@@ -494,57 +494,61 @@ def test_seg_split_e():
         'to': (6,5),
         'isUp': False,
         'bi': [3,4,5],
-        'growing':True
+        'growing':False
         })
     assert(s._segment[2] == {
         'from': (6,5),
-        'to': (10,11),
+        'to': (9,11),
         'isUp': True,
         'bi': [6,7,8],
-        'growing':True
+        'growing':False
         })
     assert(s._segment[3] == {
-        'from': (10,11),
-        'to': (13,7),
+        'from': (9,11),
+        'to': (12,7),
         'isUp': False,
         'bi': [9,10,11],
         'growing':True
         })
-#standard situation quekou f
-##                               10      
-##                            9  /
-##               8            /\/       
-##               /\   7      / 8
-##              /  \  /\    /
-##             /    \/  \  / 
-##            /     5    \/   
-##        3  /           4      
-##        /\/              
-##       / 2                
-##      1
-def test_seg_split_qk_f():
+
+#standard situation quekou e
+##                                         12
+##                    11                   /
+##                    /\             10   /
+##                   /  \   9        /\  /  
+##                  /    \  /\      /  \/      
+##                 /      \/  \    /   8   
+##                /       7    \  /      
+##               /              \/    
+##           4  /               5
+##           /\/         
+##          / 3                 
+##         2            
+##                     
+def test_seg_split_qk_e():
     s = twine.KSeq('day',[])
     s._bi = [
-        {'from':(0,1),'to':(1,3),'isUp':True,'growing':False},
-        {'from':(1,3),'to':(2,2),'isUp':False,'growing':False},
-        {'from':(2,2),'to':(3,8),'isUp':True,'growing':False},
-        {'from':(3,8),'to':(4,5),'isUp':False,'growing':False},
-        {'from':(4,5),'to':(5,7),'isUp':True,'growing':False},
-        {'from':(5,7),'to':(6,4),'isUp':False,'growing':False},
-        {'from':(6,4),'to':(7,9),'isUp':True,'growing':False},
-        {'from':(7,9),'to':(8,8),'isUp':True,'growing':False},
-        {'from':(8,8),'to':(9,10),'isUp':True,'growing':False}
+        {'from':(0,2),'to':(1,4),'isUp':True,'growing':False},
+        {'from':(1,4),'to':(2,3),'isUp':False,'growing':False},
+        {'from':(2,3),'to':(3,11),'isUp':True,'growing':False},
+        {'from':(3,11),'to':(4,7),'isUp':False,'growing':False},
+        {'from':(4,7),'to':(5,9),'isUp':True,'growing':False},
+        {'from':(5,9),'to':(6,5),'isUp':False,'growing':False},
+        {'from':(6,5),'to':(7,10),'isUp':True,'growing':False},
+        {'from':(7,10),'to':(8,8),'isUp':False,'growing':False},
+        {'from':(8,8),'to':(9,12),'isUp':True,'growing':False}
         ]
     s.makeupSegment()
     
     assert(1 == len(s._segment))
     assert(s._segment[0] == {
-        'from': (0,1),
-        'to': (9,10),
+        'from': (0,2),
+        'to': (9,12),
         'isUp': True,
         'bi': [0,1,2,3,4,5,6,7,8],
         'growing':True
-        })    
+        })
+
 #standard situation f
 ##                               
 ##                                      11
@@ -596,4 +600,41 @@ def test_seg_split_f():
         'bi': [6,7,8],
         'growing':True
         })
+    
+#standard situation quekou f
+##                               10      
+##                            9  /
+##               8            /\/       
+##               /\   7      / 8
+##              /  \  /\    /
+##             /    \/  \  / 
+##            /     5    \/   
+##        3  /           4      
+##        /\/              
+##       / 2                
+##      1
+def test_seg_split_qk_f():
+    s = twine.KSeq('day',[])
+    s._bi = [
+        {'from':(0,1),'to':(1,3),'isUp':True,'growing':False},
+        {'from':(1,3),'to':(2,2),'isUp':False,'growing':False},
+        {'from':(2,2),'to':(3,8),'isUp':True,'growing':False},
+        {'from':(3,8),'to':(4,5),'isUp':False,'growing':False},
+        {'from':(4,5),'to':(5,7),'isUp':True,'growing':False},
+        {'from':(5,7),'to':(6,4),'isUp':False,'growing':False},
+        {'from':(6,4),'to':(7,9),'isUp':True,'growing':False},
+        {'from':(7,9),'to':(8,8),'isUp':True,'growing':False},
+        {'from':(8,8),'to':(9,10),'isUp':True,'growing':False}
+        ]
+    s.makeupSegment()
+    
+    assert(1 == len(s._segment))
+    assert(s._segment[0] == {
+        'from': (0,1),
+        'to': (9,10),
+        'isUp': True,
+        'bi': [0,1,2,3,4,5,6,7,8],
+        'growing':True
+        })    
+
 
