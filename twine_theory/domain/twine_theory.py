@@ -358,7 +358,7 @@ class KSeq:
                                 i = top['biIndexEnd']
                             elif top and top['mode']=='newpeak':
                                 self._segment[-1]['to'] = self._bi[top['biIndexEnd']]['to']
-                                self._segment[-1]['bi'] += [k for k in range(i+1,to['biIndexEnd']+1)]
+                                self._segment[-1]['bi'] += [k for k in range(i+1,top['biIndexEnd']+1)]
                                 i = top['biIndexEnd']
                             else:
                                 break
@@ -378,9 +378,9 @@ class KSeq:
             val = current
             if not val: val = prev
 
-##            if i+2 == len(self._bi) and self._bi[i+1]['to'][1] < prev['from']:
-##                return {'biIndex':prev['biIndex'], 'biIndexEnd':i+1,'mode':"newpeak"}
-##                
+            if not quekou and i+2 == len(self._bi) and self._bi[i+1]['to'][1] < prev['from']:
+                return {'biIndex':prev['biIndex'], 'biIndexEnd':i+1,'mode':"newpeak"}
+                
             t = biseq_dir(val['from'],val['to'],self._bi[i]['from'][1],self._bi[i]['to'][1])
             if t == 'inclusion':
                 if self._bi[i]['from'][1] > prev['from']:#included by left
@@ -435,7 +435,7 @@ class KSeq:
             val = current
             if not val: val = prev
             
-            if i+2 == len(self._bi) and self._bi[i+1]['to'][1] > prev['from']:
+            if not quekou and i+2 == len(self._bi) and self._bi[i+1]['to'][1] > prev['from']:
                 return {'biIndex':prev['biIndex'], 'biIndexEnd':i+1,'mode':"newpeak"}
 
             t = biseq_dir(val['from'],val['to'],self._bi[i]['from'][1],self._bi[i]['to'][1])
@@ -446,8 +446,8 @@ class KSeq:
                     i += 2
                     continue
                 else:
-                    if not quekou and self._bi[i]['to'][1] < self._segment[-1]['to'][1] and \
-                       i+2 < len(self._bi) and self._bi[i+2]['to'][1] < self._segment[-1]['to'][1]:
+                    if not quekou and self._bi[i]['to'][1] < self._segment[-1]['from'][1] and \
+                       i+2 < len(self._bi) and self._bi[i+2]['to'][1] < self._segment[-1]['from'][1]:
                         return {'biIndex':i, 'biIndexEnd':i+2,'mode':"normal"}                    
                     else:
                         to = self.checkFirstSeg(i)                    
@@ -455,8 +455,11 @@ class KSeq:
                             if not quekou:
                                 return {'biIndex':i, 'biIndexEnd':to,'mode':"normal"}
                             else:
-                                if self._bi[to]['to'] < self._segment[-1]['to'] and self._bi[i-1]['to'][1] < quekou :#previous segment continue
+                                if self._bi[to]['to'][1] < self._segment[-1]['to'][1] \
+                                   and self._bi[i-1]['to'][1] < quekou :#previous segment continue
                                     return {'biIndex':i, 'biIndexEnd':to,'mode':"newpeak"}
+                                else:
+                                    break
                         else: # new high
                             prev = {'biIndex':i,'to':self._bi[i]['to'][1],'from':self._bi[i]['from'][1]}
                             current = None
