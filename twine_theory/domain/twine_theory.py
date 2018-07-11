@@ -1,8 +1,6 @@
 import pandas as pd
 import sys
-
-
-
+from . import segments
 
 class K:
     def __init__(self, time, startPrice, highPrice, endPrice, lowPrice, volume, level=1):
@@ -70,6 +68,7 @@ class KSeq:
             self._normalize()
         self.split2bi()
         self.makeupSegment()
+
         #import pdb;pdb.set_trace()
 
     def addK(self, k):
@@ -250,6 +249,10 @@ class KSeq:
                         delta = b['to'][0] - last                        
                         b['to'] = (self._norm[last].ingredient[-1] + delta, b['to'][1])
     def makeupSegment(self):
+        self._segment = []
+        segments.resolveSeg(self._bi,0,len(self._bi),self._segment)
+        
+    def makeupSegment2(self):
         self._segment = []
         
         a = self.searchFirstSeg(0)

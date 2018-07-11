@@ -23,7 +23,8 @@ def test_seg_resolve_a():
         {'from':(5,6),'to':(6,2),'isUp':False,'growing':False}
         ]
     segs = []
-    segments.resolveSeg(strokes,segs)
+
+    segments.resolveSeg(strokes,0,len(strokes),segs)
 
 
     assert(2 == len(segs))
@@ -34,8 +35,8 @@ def test_seg_resolve_a():
     assert(segs[0].direction == 'up')
     assert(segs[0].status == 'mature')
 
-    assert(segs[1]._strokes[0] == strokes[3])
-    assert(segs[1]._strokes[1] == strokes[4])
-    assert(segs[1]._strokes[2] == strokes[5])
+    assert(segs[1]._strokes[segs[1]._begin] == strokes[3])
+    assert(segs[1]._strokes[segs[1]._begin+1] == strokes[4])
+    assert(segs[1]._strokes[segs[1]._begin+2] == strokes[5])
     assert(segs[1].direction == 'down')
     assert(segs[1].status == 'growing')
