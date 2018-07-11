@@ -161,12 +161,12 @@ def resolveSeg(strokes,begin,end, segs ,currentSeg = None, prevSeg = None):
                         if currentTrait['to'][1] > currentSeg.firstStroke['from'][1] and \
                            strokes[begin+i]['to'][1] > currentSeg.firstStroke['from'][1]:
                             #breaks previous segment start by first stroke => treat as
-                            nextSeg = Segment(strokes,begin,begin+i+1)
+                            nextSeg = Segment(strokes,begin,begin+i+1,{'from':(currentTrait['to'][0],nextTrait['to'][1]-0.01), 'to':nextTrait['from']})
                             currentSeg.mature(nextSeg)
-                            segs.append(currentSeg)
+                            segs.append(nextSeg)
                             return resolveSeg(strokes,begin+nextSeg.numOfStrokes,end,segs,nextSeg)
                         else:
-                            currentTrait = { 'from':currentTrait['from'], 'to':strokes[begin+i]['to']}
+                            currentTrait = { 'from':currentTrait['from'], 'to':nextTrait['to']}
                             i += prevTrait['to'][0] - prevTrait['from'][0] + 1
                     elif t == 'inclusion' and strokes[begin+i]['to'][1] > currentTrait['to'][1]:#case 3：included in right
                         #same as 'up'
