@@ -157,12 +157,26 @@ def test_seg_split_qk_b():
         ]
     s.makeupSegment()
     
-    assert(1 == len(s._segment))
+    assert(3 == len(s._segment))
     assert(eval(str(s._segment[0])) == {
         'from': (0,1),
         'to': (3,8),
         'isUp': True,
         'bi': [0,1,2],
+        'growing':False
+        })
+    assert(eval(str(s._segment[1])) == {
+        'from': (3,8),
+        'to': (6,3),
+        'isUp': False,
+        'bi': [3,4,5],
+        'growing':False
+        })
+    assert(eval(str(s._segment[2])) == {
+        'from': (6,3),
+        'to': (9,7),
+        'isUp': True,
+        'bi': [6,7,8],
         'growing':True
         })
 
@@ -656,12 +670,26 @@ def test_seg_split_xdown_qk_b():
         ]
     s.makeupSegment()
     
-    assert(1 == len(s._segment))
+    assert(3 == len(s._segment))
     assert(eval(str(s._segment[0])) == {
         'from': (0,9),
         'to': (3,2),
         'isUp': False,
         'bi': [0,1,2],
+        'growing':False
+        })
+    assert(eval(str(s._segment[1])) == {
+        'from': (3,2),
+        'to': (6,7),
+        'isUp': True,
+        'bi': [3,4,5],
+        'growing':False
+        })
+    assert(eval(str(s._segment[2])) == {
+        'from': (6,7),
+        'to': (9,3),
+        'isUp': False,
+        'bi': [6,7,8],
         'growing':True
         })
 
@@ -752,7 +780,7 @@ def test_seg_split_xdown_d():
         {'from':(2,6),'to':(3,2),'isUp':False,'growing':False},
         {'from':(3,2),'to':(4,7),'isUp':True,'growing':False},
         {'from':(4,7),'to':(5,4),'isUp':False,'growing':False},
-        {'from':(5,4),'to':(6,4),'isUp':True,'growing':False},
+        {'from':(5,4),'to':(6,6),'isUp':True,'growing':False},
         {'from':(6,6),'to':(7,3),'isUp':False,'growing':False},
         {'from':(7,3),'to':(8,8),'isUp':True,'growing':False}
         ]
