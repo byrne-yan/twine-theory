@@ -49,7 +49,8 @@ class KSeq:
         self._seq = []
         if type(klist) is pd.DataFrame:
             for i,row in klist.iterrows():
-                self._seq.append(K(row['date'], row['open'], row['high'], row['close'], row['low'], row['volume']))
+##                import pdb;pdb.set_trace()
+                self._seq.append(K(row.name, row['open'], row['high'], row['close'], row['low'], row['volume']))
         else:
             if len(klist) > 0 and type(klist[0]) is dict:
                 for k in klist:
@@ -65,9 +66,15 @@ class KSeq:
             if k.low < self._low: self._low = k.low
             if k.high > self._high: self._high = k.high
         if len(self._seq):
+            print("normalizing...",end='')
             self._normalize()
+            print("OK")
+        print("Resolving strokes...",end='')
         self.split2bi()
+        print("OK")
+        print("Resolving segments...",end='')
         self.makeupSegment()
+        print("OK")
 
         #import pdb;pdb.set_trace()
 

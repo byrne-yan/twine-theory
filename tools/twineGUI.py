@@ -21,10 +21,10 @@ if __name__ == "__main__":
     w.setCentralWidget(view)
 
     if len(sys.argv) >= 2:
-        ks = pd.read_csv(sys.argv[1])
+        ks = pd.read_csv(sys.argv[1],parse_dates=['date'],index_col='date',dtype={"code":str})
         #倒置
-        nks = ks.sort_values('date')
-        view.addItem(createWidget(nks))
+##        ks = ks.sort_values('date')
+        view.addItem(createWidget(ks))
         view.setBackground('w')
 
         app.exec_()
