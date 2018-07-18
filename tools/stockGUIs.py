@@ -10,8 +10,8 @@ DEFAULT = {
     'lineWidth': 1,  # px
     'biColor':'b',
     'segmentColor':'r',
-    'showStick':False,
-    'showMerge':False,
+    'showStick':True,
+    'showMerge':True,
     'showBi':True,
     'showSegment':True,
     'showTwine':True
@@ -147,11 +147,11 @@ class StickWidget(pg.PlotItem):
         #import pdb;pdb.set_trace()
         p = pg.mkPen(self.style['biColor'], width=self.style['lineWidth'])
 
-        x = [kseq._bi[0]['from'][0]*(self.style['gap']+self.style['width'])+self.style['gap']+self.style['width']/2]
-        y = [kseq._bi[0]['from'][1]]
-        for i in range(0,len(kseq._bi)):
-            x.append(kseq._bi[i]['to'][0]*(self.style['gap']+self.style['width'])+self.style['gap']+self.style['width']/2)
-            y.append(kseq._bi[i]['to'][1])
+        x = [kseq._strokes[0]['from'][0]*(self.style['gap']+self.style['width'])+self.style['gap']+self.style['width']/2]
+        y = [kseq._strokes[0]['from'][1]]
+        for i in range(0,len(kseq._strokes)):
+            x.append(kseq._strokes[i]['to'][0]*(self.style['gap']+self.style['width'])+self.style['gap']+self.style['width']/2)
+            y.append(kseq._strokes[i]['to'][1])
 
        
         return pg.PlotCurveItem(x, y, pen=p)

@@ -1,5 +1,41 @@
 from twine_theory.domain import twine_theory as twine
 
+class fakeStroke:
+    def __init__(self,stroke_dict):
+        self._stroke = stroke_dict
+    def __setitem__(self,key,value):
+        if key=="hops":
+            self._stroke[key] = value
+        else:
+            super().__setitem__(key)
+            
+    def __getitem__(self,key):
+        if key=="hops":
+            import pdb;pdb.set_trace()
+            if key in self._stroke:
+                return self._stroke[key]
+            else:
+                raise KeyError
+        else:
+            return self._stroke[key]
+    def __contains__(self, item):
+        return item in self._stroke
+    
+##    def __setattr__(self,name,value):
+##        if name=="hops":
+##            self._hops = value
+##            self._flag = True
+##        else:
+##            super().__setattr__(name, value)
+##            
+##    def __getattr__(self,key):
+##        if key=="hops":
+##            return self._hops if self._flag else None
+##        super().__getattr__(key)
+            
+    def to_dict(self):
+        return self
+
 #standard situation a
    
 ##               8 
@@ -14,13 +50,13 @@ from twine_theory.domain import twine_theory as twine
 
 def test_seg_split_a():
     s = twine.KSeq('day',[])
-    s._bi = [
-        {'from':(0,1),'to':(2,5),'isUp':True,'growing':False},
-        {'from':(2,5),'to':(4,3),'isUp':False,'growing':False},
-        {'from':(4,3),'to':(6,8),'isUp':True,'growing':False},
-        {'from':(6,8),'to':(8,4),'isUp':False,'growing':False},
-        {'from':(8,4),'to':(10,6),'isUp':True,'growing':False},
-        {'from':(10,6),'to':(12,2),'isUp':False,'growing':False},
+    s._strokes = [
+        fakeStroke({'from':(0,1),'to':(2,5),'isUp':True,'growing':False}),
+        fakeStroke({'from':(2,5),'to':(4,3),'isUp':False,'growing':False}),
+        fakeStroke({'from':(4,3),'to':(6,8),'isUp':True,'growing':False}),
+        fakeStroke({'from':(6,8),'to':(8,4),'isUp':False,'growing':False}),
+        fakeStroke({'from':(8,4),'to':(10,6),'isUp':True,'growing':False}),
+        fakeStroke({'from':(10,6),'to':(12,2),'isUp':False,'growing':False})
         ]
     s.makeupSegment()
 
@@ -59,21 +95,21 @@ def test_seg_split_a():
 
 def test_seg_split_a2():
     s = twine.KSeq('day',[])
-    s._bi = [
-        {'from':(0,1),'to':(2,5),'isUp':True,'growing':False},
-        {'from':(2,5),'to':(4,3),'isUp':False,'growing':False},
-        {'from':(4,3),'to':(6,6),'isUp':True,'growing':False},
-        {'from':(6,6),'to':(8,2),'isUp':False,'growing':False},
-        {'from':(8,2),'to':(10,4),'isUp':True,'growing':False},
-        {'from':(10,4),'to':(12,3),'isUp':False,'growing':False},
-        {'from':(12,3),'to':(14,5),'isUp':True,'growing':False},
-        {'from':(14,5),'to':(16,4),'isUp':False,'growing':False},
-        {'from':(16,4),'to':(18,6),'isUp':True,'growing':False},
-        {'from':(18,6),'to':(20,5),'isUp':False,'growing':False},
-        {'from':(20,5),'to':(22,8),'isUp':True,'growing':False},
-        {'from':(22,8),'to':(24,6),'isUp':False,'growing':False},
-        {'from':(24,6),'to':(26,7),'isUp':True,'growing':False},
-        {'from':(26,7),'to':(28,4),'isUp':False,'growing':False}
+    s._strokes = [
+        fakeStroke({'from':(0,1),'to':(2,5),'isUp':True,'growing':False}),
+        fakeStroke({'from':(2,5),'to':(4,3),'isUp':False,'growing':False}),
+        fakeStroke({'from':(4,3),'to':(6,6),'isUp':True,'growing':False}),
+        fakeStroke({'from':(6,6),'to':(8,2),'isUp':False,'growing':False}),
+        fakeStroke({'from':(8,2),'to':(10,4),'isUp':True,'growing':False}),
+        fakeStroke({'from':(10,4),'to':(12,3),'isUp':False,'growing':False}),
+        fakeStroke({'from':(12,3),'to':(14,5),'isUp':True,'growing':False}),
+        fakeStroke({'from':(14,5),'to':(16,4),'isUp':False,'growing':False}),
+        fakeStroke({'from':(16,4),'to':(18,6),'isUp':True,'growing':False}),
+        fakeStroke({'from':(18,6),'to':(20,5),'isUp':False,'growing':False}),
+        fakeStroke({'from':(20,5),'to':(22,8),'isUp':True,'growing':False}),
+        fakeStroke({'from':(22,8),'to':(24,6),'isUp':False,'growing':False}),
+        fakeStroke({'from':(24,6),'to':(26,7),'isUp':True,'growing':False}),
+        fakeStroke({'from':(26,7),'to':(28,4),'isUp':False,'growing':False})
         ]
     s.makeupSegment()
 
@@ -109,7 +145,7 @@ def test_seg_split_a2():
 
 def test_seg_split_qk_a():
     s = twine.KSeq('day',[])
-    s._bi = [
+    s._strokes = [
         {'from':(0,1),'to':(2,4),'isUp':True,'growing':False},
         {'from':(2,4),'to':(4,2),'isUp':False,'growing':False},
         {'from':(4,2),'to':(6,9),'isUp':True,'growing':False},
@@ -158,7 +194,7 @@ def test_seg_split_qk_a():
 ##    1
 def test_seg_split_b():
     s = twine.KSeq('day',[])
-    s._bi = [
+    s._strokes = [
         {'from':(0,1),'to':(1,5),'isUp':True,'growing':False},
         {'from':(1,5),'to':(2,4),'isUp':False,'growing':False},
         {'from':(2,4),'to':(3,8),'isUp':True,'growing':False},
@@ -197,7 +233,7 @@ def test_seg_split_b():
 ##    1
 def test_seg_split_qk_b():
     s = twine.KSeq('day',[])
-    s._bi = [
+    s._strokes = [
         {'from':(0,1),'to':(1,5),'isUp':True,'growing':False},
         {'from':(1,5),'to':(2,4),'isUp':False,'growing':False},
         {'from':(2,4),'to':(3,8),'isUp':True,'growing':False},
@@ -247,7 +283,7 @@ def test_seg_split_qk_b():
 ##    1
 def test_seg_split_c():
     s = twine.KSeq('day',[])
-    s._bi = [
+    s._strokes = [
         {'from':(0,1),'to':(2,5),'isUp':True,'growing':False},
         {'from':(2,5),'to':(4,4),'isUp':False,'growing':False},
         {'from':(4,4),'to':(6,8),'isUp':True,'growing':False},
@@ -280,7 +316,7 @@ def test_seg_split_c():
 ##    1
 def test_seg_split_qk_c():
     s = twine.KSeq('day',[])
-    s._bi = [
+    s._strokes = [
         {'from':(0,1),'to':(2,4),'isUp':True,'growing':False},
         {'from':(2,4),'to':(4,2),'isUp':False,'growing':False},
         {'from':(4,2),'to':(6,8),'isUp':True,'growing':False},
@@ -313,7 +349,7 @@ def test_seg_split_qk_c():
 ##    1
 def test_seg_split_d():
     s = twine.KSeq('day',[])
-    s._bi = [
+    s._strokes = [
         {'from':(0,1),'to':(3,5),'isUp':True,'growing':False},
         {'from':(3,5),'to':(6,4),'isUp':False,'growing':False},
         {'from':(6,4),'to':(9,8),'isUp':True,'growing':False},
@@ -353,7 +389,7 @@ def test_seg_split_d():
 ##      1
 def test_seg_split_qk_d():
     s = twine.KSeq('day',[])
-    s._bi = [
+    s._strokes = [
         {'from':(0,1),'to':(1,3),'isUp':True,'growing':False},
         {'from':(1,3),'to':(2,2),'isUp':False,'growing':False},
         {'from':(2,2),'to':(3,9),'isUp':True,'growing':False},
@@ -390,7 +426,7 @@ def test_seg_split_qk_d():
 ##                        
 def test_seg_split_e():
     s = twine.KSeq('day',[])
-    s._bi = [
+    s._strokes = [
         {'from':(0,3),'to':(1,8),'isUp':True,'growing':False},
         {'from':(1,8),'to':(2,4),'isUp':False,'growing':False},
         {'from':(2,4),'to':(3,9),'isUp':True,'growing':False},
@@ -453,7 +489,7 @@ def test_seg_split_e():
 ##                     
 def test_seg_split_qk_e():
     s = twine.KSeq('day',[])
-    s._bi = [
+    s._strokes = [
         {'from':(0,2),'to':(1,4),'isUp':True,'growing':False},
         {'from':(1,4),'to':(2,3),'isUp':False,'growing':False},
         {'from':(2,3),'to':(3,11),'isUp':True,'growing':False},
@@ -491,7 +527,7 @@ def test_seg_split_qk_e():
 ##                     
 def test_seg_split_f():
     s = twine.KSeq('day',[])
-    s._bi = [
+    s._strokes = [
         {'from':(0,3),'to':(1,8),'isUp':True,'growing':False},
         {'from':(1,8),'to':(2,4),'isUp':False,'growing':False},
         {'from':(2,4),'to':(3,9),'isUp':True,'growing':False},
@@ -541,7 +577,7 @@ def test_seg_split_f():
 ##      1
 def test_seg_split_qk_f():
     s = twine.KSeq('day',[])
-    s._bi = [
+    s._strokes = [
         {'from':(0,1),'to':(1,3),'isUp':True,'growing':False},
         {'from':(1,3),'to':(2,2),'isUp':False,'growing':False},
         {'from':(2,2),'to':(3,8),'isUp':True,'growing':False},
@@ -579,7 +615,7 @@ def test_seg_split_qk_f():
 
 def test_seg_split_xdown_a():
     s = twine.KSeq('day',[])
-    s._bi = [
+    s._strokes = [
         {'from':(0,8),'to':(1,4),'isUp':False,'growing':False},
         {'from':(1,4),'to':(2,6),'isUp':True,'growing':False},
         {'from':(2,6),'to':(3,1),'isUp':False,'growing':False},
@@ -620,7 +656,7 @@ def test_seg_split_xdown_a():
 
 def test_seg_split_xdown_qk_a():
     s = twine.KSeq('day',[])
-    s._bi = [
+    s._strokes = [
         {'from':(0,9),'to':(1,6),'isUp':False,'growing':False},
         {'from':(1,6),'to':(2,8),'isUp':True,'growing':False},
         {'from':(2,8),'to':(3,1),'isUp':False,'growing':False},
@@ -671,7 +707,7 @@ def test_seg_split_xdown_qk_a():
     
 def test_seg_split_xdown_b():
     s = twine.KSeq('day',[])
-    s._bi = [
+    s._strokes = [
         {'from':(0,9),'to':(1,5),'isUp':False,'growing':False},
         {'from':(1,5),'to':(2,6),'isUp':True,'growing':False},
         {'from':(2,6),'to':(3,2),'isUp':False,'growing':False},
@@ -710,7 +746,7 @@ def test_seg_split_xdown_b():
 ##             2
 def test_seg_split_xdown_qk_b():
     s = twine.KSeq('day',[])
-    s._bi = [
+    s._strokes = [
         {'from':(0,9),'to':(1,5),'isUp':False,'growing':False},
         {'from':(1,5),'to':(2,6),'isUp':True,'growing':False},
         {'from':(2,6),'to':(3,2),'isUp':False,'growing':False},
@@ -761,7 +797,7 @@ def test_seg_split_xdown_qk_b():
 ##                            1
 def test_seg_split_xdown_c():
     s = twine.KSeq('day',[])
-    s._bi = [
+    s._strokes = [
         {'from':(0,9),'to':(1,5),'isUp':False,'growing':False},
         {'from':(1,5),'to':(2,6),'isUp':True,'growing':False},
         {'from':(2,6),'to':(3,2),'isUp':False,'growing':False},
@@ -794,7 +830,7 @@ def test_seg_split_xdown_c():
 ##                         1
 def test_seg_split_xdown_qk_c():
     s = twine.KSeq('day',[])
-    s._bi = [
+    s._strokes = [
         {'from':(0,9),'to':(1,6),'isUp':False,'growing':False},
         {'from':(1,6),'to':(2,8),'isUp':True,'growing':False},
         {'from':(2,8),'to':(3,2),'isUp':False,'growing':False},
@@ -827,7 +863,7 @@ def test_seg_split_xdown_qk_c():
 ##    
 def test_seg_split_xdown_d():
     s = twine.KSeq('day',[])
-    s._bi = [
+    s._strokes = [
         {'from':(0,9),'to':(1,5),'isUp':False,'growing':False},
         {'from':(1,5),'to':(2,6),'isUp':True,'growing':False},
         {'from':(2,6),'to':(3,2),'isUp':False,'growing':False},
@@ -867,7 +903,7 @@ def test_seg_split_xdown_d():
 ##                1
 def test_seg_split_xdown_qk_d():
     s = twine.KSeq('day',[])
-    s._bi = [
+    s._strokes = [
         {'from':(0,9),'to':(1,7),'isUp':False,'growing':False},
         {'from':(1,7),'to':(2,8),'isUp':True,'growing':False},
         {'from':(2,8),'to':(3,1),'isUp':False,'growing':False},
@@ -903,7 +939,7 @@ def test_seg_split_xdown_qk_d():
 ##     
 def test_seg_split_xdown_e():
     s = twine.KSeq('day',[])
-    s._bi = [
+    s._strokes = [
         {'from':(0,10),'to':(1,5),'isUp':False,'growing':False},
         {'from':(1,5),'to':(2,9),'isUp':True,'growing':False},
         {'from':(2,9),'to':(3,4),'isUp':False,'growing':False},
@@ -967,7 +1003,7 @@ def test_seg_split_xdown_e():
 ##      
 def test_seg_split_xdown_qk_e():
     s = twine.KSeq('day',[])
-    s._bi = [
+    s._strokes = [
         {'from':(0,11),'to':(1,9),'isUp':False,'growing':False},
         {'from':(1,9),'to':(2,10),'isUp':True,'growing':False},
         {'from':(2,10),'to':(3,2),'isUp':False,'growing':False},
@@ -1003,7 +1039,7 @@ def test_seg_split_xdown_qk_e():
 ##   
 def test_seg_split_xdown_f():
     s = twine.KSeq('day',[])
-    s._bi = [
+    s._strokes = [
         {'from':(0,9),'to':(1,4),'isUp':False,'growing':False},
         {'from':(1,4),'to':(2,8),'isUp':True,'growing':False},
         {'from':(2,8),'to':(3,3),'isUp':False,'growing':False},
@@ -1053,7 +1089,7 @@ def test_seg_split_xdown_f():
 ##                               1
 def test_seg_split_xdown_qk_f():
     s = twine.KSeq('day',[])
-    s._bi = [
+    s._strokes = [
         {'from':(0,10),'to':(1,8),'isUp':False,'growing':False},
         {'from':(1,8),'to':(2,9),'isUp':True,'growing':False},
         {'from':(2,9),'to':(3,3),'isUp':False,'growing':False},
