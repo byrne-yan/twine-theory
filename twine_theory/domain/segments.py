@@ -82,7 +82,7 @@ class Segment:
     def grows(self,lastTrait,step=None):
         assert(self.status == 'growing')
         if not step:
-            step = lastTrait['hops']+1 if lastTrait['hops'] else 2
+            step = lastTrait['hops']+1 if 'hops' in lastTrait else 2
 
         if self._end + step > len(self._strokes):
             import pdb;pdb.set_trace()
@@ -148,7 +148,7 @@ def resolveSeg(strokes,begin,end, segs ,currentSeg = None, prevSeg = None):
                         currentTrait = nextTrait
                         currentSeg.grows(prevTrait)
                         i += 2
-                        iPeak += (2 if (not prevTrait['hops']) else prevTrait['hops']+1)
+                        iPeak += (2 if ('hops' not in prevTrait) else prevTrait['hops']+1)
                     elif t == 'inclusion' and strokes[begin+i]['to'][1] >= currentTrait['to'][1]:#included in left
                         if currentTrait['to'][1] < currentSeg.firstStroke['from'][1] and \
                            strokes[begin+i]['to'][1] < currentSeg.firstStroke['from'][1]:
@@ -226,8 +226,7 @@ def resolveSeg(strokes,begin,end, segs ,currentSeg = None, prevSeg = None):
                         i += 2
                         iPeak += (2 if (not prevTrait['hops']) else prevTrait['hops']+1)
                     elif t == 'up':#case 2
-##                        hops = prevTrait['hops']+1 if 'hops' in prevTrait.keys() else 2
-                        hops = prevTrait['hops']+1 if prevTrait['hops'] else 2
+                        hops = prevTrait['hops']+1 if 'hops' in prevTrait else 2
                         
                         nextSeg = Segment(strokes,begin+iPeak,begin+i+1)
                         if currentTrait['to'][1] >= currentSeg.lastPeak:

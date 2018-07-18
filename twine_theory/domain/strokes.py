@@ -79,7 +79,7 @@ class Stroke:
             return self.status == 'growing'
         elif index == 'hops':
             return self._trick[index] if index in self._trick else None
-        return supper().__getitem__(index)
+        #return supper().__getitem__(index)
         
 def resolve_strokes(kseq,begin,end,strokes,currentStroke=None):
     assert(len(kseq)>=begin)

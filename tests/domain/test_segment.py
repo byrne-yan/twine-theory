@@ -11,7 +11,6 @@ class fakeStroke:
             
     def __getitem__(self,key):
         if key=="hops":
-            import pdb;pdb.set_trace()
             if key in self._stroke:
                 return self._stroke[key]
             else:
@@ -146,15 +145,15 @@ def test_seg_split_a2():
 def test_seg_split_qk_a():
     s = twine.KSeq('day',[])
     s._strokes = [
-        {'from':(0,1),'to':(2,4),'isUp':True,'growing':False},
-        {'from':(2,4),'to':(4,2),'isUp':False,'growing':False},
-        {'from':(4,2),'to':(6,9),'isUp':True,'growing':False},
-        {'from':(6,9),'to':(8,6),'isUp':False,'growing':False},
-        {'from':(8,6),'to':(10,8),'isUp':True,'growing':False},
-        {'from':(10,8),'to':(12,5),'isUp':False,'growing':False},
-        {'from':(12,5),'to':(14,7),'isUp':True,'growing':False},
-        {'from':(14,7),'to':(16,6),'isUp':False,'growing':False},
-        {'from':(16,6),'to':(18,8),'isUp':True,'growing':False},
+        fakeStroke({'from':(0,1),'to':(2,4),'isUp':True,'growing':False}),
+        fakeStroke({'from':(2,4),'to':(4,2),'isUp':False,'growing':False}),
+        fakeStroke({'from':(4,2),'to':(6,9),'isUp':True,'growing':False}),
+        fakeStroke({'from':(6,9),'to':(8,6),'isUp':False,'growing':False}),
+        fakeStroke({'from':(8,6),'to':(10,8),'isUp':True,'growing':False}),
+        fakeStroke({'from':(10,8),'to':(12,5),'isUp':False,'growing':False}),
+        fakeStroke({'from':(12,5),'to':(14,7),'isUp':True,'growing':False}),
+        fakeStroke({'from':(14,7),'to':(16,6),'isUp':False,'growing':False}),
+        fakeStroke({'from':(16,6),'to':(18,8),'isUp':True,'growing':False}),
         ]
     s.makeupSegment()
     assert(3 == len(s._segment))
@@ -195,12 +194,12 @@ def test_seg_split_qk_a():
 def test_seg_split_b():
     s = twine.KSeq('day',[])
     s._strokes = [
-        {'from':(0,1),'to':(1,5),'isUp':True,'growing':False},
-        {'from':(1,5),'to':(2,4),'isUp':False,'growing':False},
-        {'from':(2,4),'to':(3,8),'isUp':True,'growing':False},
-        {'from':(3,8),'to':(4,3),'isUp':False,'growing':False},
-        {'from':(4,3),'to':(5,6),'isUp':True,'growing':False},
-        {'from':(5,6),'to':(6,2),'isUp':False,'growing':False},
+        fakeStroke({'from':(0,1),'to':(1,5),'isUp':True,'growing':False}),
+        fakeStroke({'from':(1,5),'to':(2,4),'isUp':False,'growing':False}),
+        fakeStroke({'from':(2,4),'to':(3,8),'isUp':True,'growing':False}),
+        fakeStroke({'from':(3,8),'to':(4,3),'isUp':False,'growing':False}),
+        fakeStroke({'from':(4,3),'to':(5,6),'isUp':True,'growing':False}),
+        fakeStroke({'from':(5,6),'to':(6,2),'isUp':False,'growing':False}),
         ]
     s.makeupSegment()
     
@@ -234,15 +233,15 @@ def test_seg_split_b():
 def test_seg_split_qk_b():
     s = twine.KSeq('day',[])
     s._strokes = [
-        {'from':(0,1),'to':(1,5),'isUp':True,'growing':False},
-        {'from':(1,5),'to':(2,4),'isUp':False,'growing':False},
-        {'from':(2,4),'to':(3,8),'isUp':True,'growing':False},
-        {'from':(3,8),'to':(4,6),'isUp':False,'growing':False},
-        {'from':(4,6),'to':(5,7),'isUp':True,'growing':False},
-        {'from':(5,7),'to':(6,3),'isUp':False,'growing':False},
-        {'from':(6,3),'to':(7,5),'isUp':True,'growing':False},
-        {'from':(7,5),'to':(8,4),'isUp':False,'growing':False},
-        {'from':(8,4),'to':(9,7),'isUp':True,'growing':False}
+        fakeStroke({'from':(0,1),'to':(1,5),'isUp':True,'growing':False}),
+        fakeStroke({'from':(1,5),'to':(2,4),'isUp':False,'growing':False}),
+        fakeStroke({'from':(2,4),'to':(3,8),'isUp':True,'growing':False}),
+        fakeStroke({'from':(3,8),'to':(4,6),'isUp':False,'growing':False}),
+        fakeStroke({'from':(4,6),'to':(5,7),'isUp':True,'growing':False}),
+        fakeStroke({'from':(5,7),'to':(6,3),'isUp':False,'growing':False}),
+        fakeStroke({'from':(6,3),'to':(7,5),'isUp':True,'growing':False}),
+        fakeStroke({'from':(7,5),'to':(8,4),'isUp':False,'growing':False}),
+        fakeStroke({'from':(8,4),'to':(9,7),'isUp':True,'growing':False})
         ]
     s.makeupSegment()
     
@@ -284,13 +283,13 @@ def test_seg_split_qk_b():
 def test_seg_split_c():
     s = twine.KSeq('day',[])
     s._strokes = [
-        {'from':(0,1),'to':(2,5),'isUp':True,'growing':False},
-        {'from':(2,5),'to':(4,4),'isUp':False,'growing':False},
-        {'from':(4,4),'to':(6,8),'isUp':True,'growing':False},
-        {'from':(6,8),'to':(8,3),'isUp':False,'growing':False},
-        {'from':(8,3),'to':(10,6),'isUp':True,'growing':False},
-        {'from':(10,6),'to':(12,4),'isUp':False,'growing':False},
-        {'from':(12,4),'to':(14,9),'isUp':False,'growing':False}
+        fakeStroke({'from':(0,1),'to':(2,5),'isUp':True,'growing':False}),
+        fakeStroke({'from':(2,5),'to':(4,4),'isUp':False,'growing':False}),
+        fakeStroke({'from':(4,4),'to':(6,8),'isUp':True,'growing':False}),
+        fakeStroke({'from':(6,8),'to':(8,3),'isUp':False,'growing':False}),
+        fakeStroke({'from':(8,3),'to':(10,6),'isUp':True,'growing':False}),
+        fakeStroke({'from':(10,6),'to':(12,4),'isUp':False,'growing':False}),
+        fakeStroke({'from':(12,4),'to':(14,9),'isUp':False,'growing':False})
         ]
     s.makeupSegment()
     
@@ -317,13 +316,13 @@ def test_seg_split_c():
 def test_seg_split_qk_c():
     s = twine.KSeq('day',[])
     s._strokes = [
-        {'from':(0,1),'to':(2,4),'isUp':True,'growing':False},
-        {'from':(2,4),'to':(4,2),'isUp':False,'growing':False},
-        {'from':(4,2),'to':(6,8),'isUp':True,'growing':False},
-        {'from':(6,8),'to':(8,5),'isUp':False,'growing':False},
-        {'from':(8,5),'to':(10,7),'isUp':True,'growing':False},
-        {'from':(10,7),'to':(12,6),'isUp':False,'growing':False},
-        {'from':(12,6),'to':(14,9),'isUp':True,'growing':False}
+        fakeStroke({'from':(0,1),'to':(2,4),'isUp':True,'growing':False}),
+        fakeStroke({'from':(2,4),'to':(4,2),'isUp':False,'growing':False}),
+        fakeStroke({'from':(4,2),'to':(6,8),'isUp':True,'growing':False}),
+        fakeStroke({'from':(6,8),'to':(8,5),'isUp':False,'growing':False}),
+        fakeStroke({'from':(8,5),'to':(10,7),'isUp':True,'growing':False}),
+        fakeStroke({'from':(10,7),'to':(12,6),'isUp':False,'growing':False}),
+        fakeStroke({'from':(12,6),'to':(14,9),'isUp':True,'growing':False})
         ]
     s.makeupSegment()
     
@@ -350,14 +349,14 @@ def test_seg_split_qk_c():
 def test_seg_split_d():
     s = twine.KSeq('day',[])
     s._strokes = [
-        {'from':(0,1),'to':(3,5),'isUp':True,'growing':False},
-        {'from':(3,5),'to':(6,4),'isUp':False,'growing':False},
-        {'from':(6,4),'to':(9,8),'isUp':True,'growing':False},
-        {'from':(9,8),'to':(12,3),'isUp':False,'growing':False},
-        {'from':(12,3),'to':(15,6),'isUp':True,'growing':False},
-        {'from':(15,6),'to':(18,4),'isUp':False,'growing':False},
-        {'from':(18,4),'to':(21,7),'isUp':False,'growing':False},
-        {'from':(21,7),'to':(24,2),'isUp':False,'growing':False}
+        fakeStroke({'from':(0,1),'to':(3,5),'isUp':True,'growing':False}),
+        fakeStroke({'from':(3,5),'to':(6,4),'isUp':False,'growing':False}),
+        fakeStroke({'from':(6,4),'to':(9,8),'isUp':True,'growing':False}),
+        fakeStroke({'from':(9,8),'to':(12,3),'isUp':False,'growing':False}),
+        fakeStroke({'from':(12,3),'to':(15,6),'isUp':True,'growing':False}),
+        fakeStroke({'from':(15,6),'to':(18,4),'isUp':False,'growing':False}),
+        fakeStroke({'from':(18,4),'to':(21,7),'isUp':False,'growing':False}),
+        fakeStroke({'from':(21,7),'to':(24,2),'isUp':False,'growing':False})
         ]
     s.makeupSegment()
     
@@ -390,14 +389,14 @@ def test_seg_split_d():
 def test_seg_split_qk_d():
     s = twine.KSeq('day',[])
     s._strokes = [
-        {'from':(0,1),'to':(1,3),'isUp':True,'growing':False},
-        {'from':(1,3),'to':(2,2),'isUp':False,'growing':False},
-        {'from':(2,2),'to':(3,9),'isUp':True,'growing':False},
-        {'from':(3,9),'to':(4,5),'isUp':False,'growing':False},
-        {'from':(4,5),'to':(5,7),'isUp':True,'growing':False},
-        {'from':(5,7),'to':(6,6),'isUp':False,'growing':False},
-        {'from':(6,6),'to':(7,8),'isUp':True,'growing':False},
-        {'from':(7,8),'to':(8,4),'isUp':False,'growing':False}
+        fakeStroke({'from':(0,1),'to':(1,3),'isUp':True,'growing':False}),
+        fakeStroke({'from':(1,3),'to':(2,2),'isUp':False,'growing':False}),
+        fakeStroke({'from':(2,2),'to':(3,9),'isUp':True,'growing':False}),
+        fakeStroke({'from':(3,9),'to':(4,5),'isUp':False,'growing':False}),
+        fakeStroke({'from':(4,5),'to':(5,7),'isUp':True,'growing':False}),
+        fakeStroke({'from':(5,7),'to':(6,6),'isUp':False,'growing':False}),
+        fakeStroke({'from':(6,6),'to':(7,8),'isUp':True,'growing':False}),
+        fakeStroke({'from':(7,8),'to':(8,4),'isUp':False,'growing':False})
         ]
     s.makeupSegment()
     
@@ -427,18 +426,18 @@ def test_seg_split_qk_d():
 def test_seg_split_e():
     s = twine.KSeq('day',[])
     s._strokes = [
-        {'from':(0,3),'to':(1,8),'isUp':True,'growing':False},
-        {'from':(1,8),'to':(2,4),'isUp':False,'growing':False},
-        {'from':(2,4),'to':(3,9),'isUp':True,'growing':False},
-        {'from':(3,9),'to':(4,6),'isUp':False,'growing':False},
-        {'from':(4,6),'to':(5,7),'isUp':True,'growing':False},
-        {'from':(5,7),'to':(6,5),'isUp':False,'growing':False},
-        {'from':(6,5),'to':(7,12),'isUp':True,'growing':False},
-        {'from':(7,12),'to':(8,9),'isUp':False,'growing':False},
-        {'from':(8,9),'to':(9,11),'isUp':True,'growing':False},
-        {'from':(9,11),'to':(10,8),'isUp':False,'growing':False},
-        {'from':(10,8),'to':(11,10),'isUp':True,'growing':False},
-        {'from':(11,10),'to':(12,7),'isUp':False,'growing':False}
+        fakeStroke({'from':(0,3),'to':(1,8),'isUp':True,'growing':False}),
+        fakeStroke({'from':(1,8),'to':(2,4),'isUp':False,'growing':False}),
+        fakeStroke({'from':(2,4),'to':(3,9),'isUp':True,'growing':False}),
+        fakeStroke({'from':(3,9),'to':(4,6),'isUp':False,'growing':False}),
+        fakeStroke({'from':(4,6),'to':(5,7),'isUp':True,'growing':False}),
+        fakeStroke({'from':(5,7),'to':(6,5),'isUp':False,'growing':False}),
+        fakeStroke({'from':(6,5),'to':(7,12),'isUp':True,'growing':False}),
+        fakeStroke({'from':(7,12),'to':(8,9),'isUp':False,'growing':False}),
+        fakeStroke({'from':(8,9),'to':(9,11),'isUp':True,'growing':False}),
+        fakeStroke({'from':(9,11),'to':(10,8),'isUp':False,'growing':False}),
+        fakeStroke({'from':(10,8),'to':(11,10),'isUp':True,'growing':False}),
+        fakeStroke({'from':(11,10),'to':(12,7),'isUp':False,'growing':False})
         
         ]
     s.makeupSegment()
@@ -490,15 +489,15 @@ def test_seg_split_e():
 def test_seg_split_qk_e():
     s = twine.KSeq('day',[])
     s._strokes = [
-        {'from':(0,2),'to':(1,4),'isUp':True,'growing':False},
-        {'from':(1,4),'to':(2,3),'isUp':False,'growing':False},
-        {'from':(2,3),'to':(3,11),'isUp':True,'growing':False},
-        {'from':(3,11),'to':(4,7),'isUp':False,'growing':False},
-        {'from':(4,7),'to':(5,9),'isUp':True,'growing':False},
-        {'from':(5,9),'to':(6,5),'isUp':False,'growing':False},
-        {'from':(6,5),'to':(7,10),'isUp':True,'growing':False},
-        {'from':(7,10),'to':(8,8),'isUp':False,'growing':False},
-        {'from':(8,8),'to':(9,12),'isUp':True,'growing':False}
+        fakeStroke({'from':(0,2),'to':(1,4),'isUp':True,'growing':False}),
+        fakeStroke({'from':(1,4),'to':(2,3),'isUp':False,'growing':False}),
+        fakeStroke({'from':(2,3),'to':(3,11),'isUp':True,'growing':False}),
+        fakeStroke({'from':(3,11),'to':(4,7),'isUp':False,'growing':False}),
+        fakeStroke({'from':(4,7),'to':(5,9),'isUp':True,'growing':False}),
+        fakeStroke({'from':(5,9),'to':(6,5),'isUp':False,'growing':False}),
+        fakeStroke({'from':(6,5),'to':(7,10),'isUp':True,'growing':False}),
+        fakeStroke({'from':(7,10),'to':(8,8),'isUp':False,'growing':False}),
+        fakeStroke({'from':(8,8),'to':(9,12),'isUp':True,'growing':False})
         ]
     s.makeupSegment()
     
@@ -528,15 +527,15 @@ def test_seg_split_qk_e():
 def test_seg_split_f():
     s = twine.KSeq('day',[])
     s._strokes = [
-        {'from':(0,3),'to':(1,8),'isUp':True,'growing':False},
-        {'from':(1,8),'to':(2,4),'isUp':False,'growing':False},
-        {'from':(2,4),'to':(3,9),'isUp':True,'growing':False},
-        {'from':(3,9),'to':(4,6),'isUp':False,'growing':False},
-        {'from':(4,6),'to':(5,7),'isUp':True,'growing':False},
-        {'from':(5,7),'to':(6,5),'isUp':False,'growing':False},
-        {'from':(6,5),'to':(7,10),'isUp':True,'growing':False},
-        {'from':(7,10),'to':(8,6),'isUp':False,'growing':False},
-        {'from':(8,6),'to':(9,11),'isUp':True,'growing':False}        
+        fakeStroke({'from':(0,3),'to':(1,8),'isUp':True,'growing':False}),
+        fakeStroke({'from':(1,8),'to':(2,4),'isUp':False,'growing':False}),
+        fakeStroke({'from':(2,4),'to':(3,9),'isUp':True,'growing':False}),
+        fakeStroke({'from':(3,9),'to':(4,6),'isUp':False,'growing':False}),
+        fakeStroke({'from':(4,6),'to':(5,7),'isUp':True,'growing':False}),
+        fakeStroke({'from':(5,7),'to':(6,5),'isUp':False,'growing':False}),
+        fakeStroke({'from':(6,5),'to':(7,10),'isUp':True,'growing':False}),
+        fakeStroke({'from':(7,10),'to':(8,6),'isUp':False,'growing':False}),
+        fakeStroke({'from':(8,6),'to':(9,11),'isUp':True,'growing':False})     
         ]
     s.makeupSegment()
     
@@ -578,15 +577,15 @@ def test_seg_split_f():
 def test_seg_split_qk_f():
     s = twine.KSeq('day',[])
     s._strokes = [
-        {'from':(0,1),'to':(1,3),'isUp':True,'growing':False},
-        {'from':(1,3),'to':(2,2),'isUp':False,'growing':False},
-        {'from':(2,2),'to':(3,8),'isUp':True,'growing':False},
-        {'from':(3,8),'to':(4,5),'isUp':False,'growing':False},
-        {'from':(4,5),'to':(5,7),'isUp':True,'growing':False},
-        {'from':(5,7),'to':(6,4),'isUp':False,'growing':False},
-        {'from':(6,4),'to':(7,9),'isUp':True,'growing':False},
-        {'from':(7,9),'to':(8,8),'isUp':False,'growing':False},
-        {'from':(8,8),'to':(9,10),'isUp':True,'growing':False}
+        fakeStroke({'from':(0,1),'to':(1,3),'isUp':True,'growing':False}),
+        fakeStroke({'from':(1,3),'to':(2,2),'isUp':False,'growing':False}),
+        fakeStroke({'from':(2,2),'to':(3,8),'isUp':True,'growing':False}),
+        fakeStroke({'from':(3,8),'to':(4,5),'isUp':False,'growing':False}),
+        fakeStroke({'from':(4,5),'to':(5,7),'isUp':True,'growing':False}),
+        fakeStroke({'from':(5,7),'to':(6,4),'isUp':False,'growing':False}),
+        fakeStroke({'from':(6,4),'to':(7,9),'isUp':True,'growing':False}),
+        fakeStroke({'from':(7,9),'to':(8,8),'isUp':False,'growing':False}),
+        fakeStroke({'from':(8,8),'to':(9,10),'isUp':True,'growing':False})
         ]
     s.makeupSegment()
     
@@ -616,12 +615,12 @@ def test_seg_split_qk_f():
 def test_seg_split_xdown_a():
     s = twine.KSeq('day',[])
     s._strokes = [
-        {'from':(0,8),'to':(1,4),'isUp':False,'growing':False},
-        {'from':(1,4),'to':(2,6),'isUp':True,'growing':False},
-        {'from':(2,6),'to':(3,1),'isUp':False,'growing':False},
-        {'from':(3,1),'to':(4,5),'isUp':True,'growing':False},
-        {'from':(4,5),'to':(5,3),'isUp':False,'growing':False},
-        {'from':(5,3),'to':(6,7),'isUp':True,'growing':False},
+        fakeStroke({'from':(0,8),'to':(1,4),'isUp':False,'growing':False}),
+        fakeStroke({'from':(1,4),'to':(2,6),'isUp':True,'growing':False}),
+        fakeStroke({'from':(2,6),'to':(3,1),'isUp':False,'growing':False}),
+        fakeStroke({'from':(3,1),'to':(4,5),'isUp':True,'growing':False}),
+        fakeStroke({'from':(4,5),'to':(5,3),'isUp':False,'growing':False}),
+        fakeStroke({'from':(5,3),'to':(6,7),'isUp':True,'growing':False}),
         ]
     s.makeupSegment()
     assert(2 == len(s._segment))
@@ -657,15 +656,15 @@ def test_seg_split_xdown_a():
 def test_seg_split_xdown_qk_a():
     s = twine.KSeq('day',[])
     s._strokes = [
-        {'from':(0,9),'to':(1,6),'isUp':False,'growing':False},
-        {'from':(1,6),'to':(2,8),'isUp':True,'growing':False},
-        {'from':(2,8),'to':(3,1),'isUp':False,'growing':False},
-        {'from':(3,1),'to':(4,4),'isUp':True,'growing':False},
-        {'from':(4,4),'to':(5,2),'isUp':False,'growing':False},
-        {'from':(5,2),'to':(6,5),'isUp':True,'growing':False},
-        {'from':(6,5),'to':(7,3),'isUp':False,'growing':False},
-        {'from':(7,3),'to':(8,4),'isUp':True,'growing':False},
-        {'from':(8,4),'to':(9,2),'isUp':False,'growing':False},
+        fakeStroke({'from':(0,9),'to':(1,6),'isUp':False,'growing':False}),
+        fakeStroke({'from':(1,6),'to':(2,8),'isUp':True,'growing':False}),
+        fakeStroke({'from':(2,8),'to':(3,1),'isUp':False,'growing':False}),
+        fakeStroke({'from':(3,1),'to':(4,4),'isUp':True,'growing':False}),
+        fakeStroke({'from':(4,4),'to':(5,2),'isUp':False,'growing':False}),
+        fakeStroke({'from':(5,2),'to':(6,5),'isUp':True,'growing':False}),
+        fakeStroke({'from':(6,5),'to':(7,3),'isUp':False,'growing':False}),
+        fakeStroke({'from':(7,3),'to':(8,4),'isUp':True,'growing':False}),
+        fakeStroke({'from':(8,4),'to':(9,2),'isUp':False,'growing':False}),
         ]
     s.makeupSegment()
     assert(3 == len(s._segment))
@@ -708,12 +707,12 @@ def test_seg_split_xdown_qk_a():
 def test_seg_split_xdown_b():
     s = twine.KSeq('day',[])
     s._strokes = [
-        {'from':(0,9),'to':(1,5),'isUp':False,'growing':False},
-        {'from':(1,5),'to':(2,6),'isUp':True,'growing':False},
-        {'from':(2,6),'to':(3,2),'isUp':False,'growing':False},
-        {'from':(3,2),'to':(4,7),'isUp':True,'growing':False},
-        {'from':(4,7),'to':(5,4),'isUp':False,'growing':False},
-        {'from':(5,4),'to':(6,8),'isUp':True,'growing':False}
+        fakeStroke({'from':(0,9),'to':(1,5),'isUp':False,'growing':False}),
+        fakeStroke({'from':(1,5),'to':(2,6),'isUp':True,'growing':False}),
+        fakeStroke({'from':(2,6),'to':(3,2),'isUp':False,'growing':False}),
+        fakeStroke({'from':(3,2),'to':(4,7),'isUp':True,'growing':False}),
+        fakeStroke({'from':(4,7),'to':(5,4),'isUp':False,'growing':False}),
+        fakeStroke({'from':(5,4),'to':(6,8),'isUp':True,'growing':False})
         ]
     s.makeupSegment()
     
@@ -747,15 +746,15 @@ def test_seg_split_xdown_b():
 def test_seg_split_xdown_qk_b():
     s = twine.KSeq('day',[])
     s._strokes = [
-        {'from':(0,9),'to':(1,5),'isUp':False,'growing':False},
-        {'from':(1,5),'to':(2,6),'isUp':True,'growing':False},
-        {'from':(2,6),'to':(3,2),'isUp':False,'growing':False},
-        {'from':(3,2),'to':(4,4),'isUp':True,'growing':False},
-        {'from':(4,4),'to':(5,3),'isUp':False,'growing':False},
-        {'from':(5,3),'to':(6,7),'isUp':True,'growing':False},
-        {'from':(6,7),'to':(7,5),'isUp':False,'growing':False},
-        {'from':(7,5),'to':(8,6),'isUp':True,'growing':False},
-        {'from':(8,6),'to':(9,3),'isUp':False,'growing':False}
+        fakeStroke({'from':(0,9),'to':(1,5),'isUp':False,'growing':False}),
+        fakeStroke({'from':(1,5),'to':(2,6),'isUp':True,'growing':False}),
+        fakeStroke({'from':(2,6),'to':(3,2),'isUp':False,'growing':False}),
+        fakeStroke({'from':(3,2),'to':(4,4),'isUp':True,'growing':False}),
+        fakeStroke({'from':(4,4),'to':(5,3),'isUp':False,'growing':False}),
+        fakeStroke({'from':(5,3),'to':(6,7),'isUp':True,'growing':False}),
+        fakeStroke({'from':(6,7),'to':(7,5),'isUp':False,'growing':False}),
+        fakeStroke({'from':(7,5),'to':(8,6),'isUp':True,'growing':False}),
+        fakeStroke({'from':(8,6),'to':(9,3),'isUp':False,'growing':False})
         ]
     s.makeupSegment()
     
@@ -798,13 +797,13 @@ def test_seg_split_xdown_qk_b():
 def test_seg_split_xdown_c():
     s = twine.KSeq('day',[])
     s._strokes = [
-        {'from':(0,9),'to':(1,5),'isUp':False,'growing':False},
-        {'from':(1,5),'to':(2,6),'isUp':True,'growing':False},
-        {'from':(2,6),'to':(3,2),'isUp':False,'growing':False},
-        {'from':(3,2),'to':(4,7),'isUp':True,'growing':False},
-        {'from':(4,7),'to':(5,4),'isUp':False,'growing':False},
-        {'from':(5,4),'to':(6,6),'isUp':True,'growing':False},
-        {'from':(6,6),'to':(7,1),'isUp':False,'growing':False}
+        fakeStroke({'from':(0,9),'to':(1,5),'isUp':False,'growing':False}),
+        fakeStroke({'from':(1,5),'to':(2,6),'isUp':True,'growing':False}),
+        fakeStroke({'from':(2,6),'to':(3,2),'isUp':False,'growing':False}),
+        fakeStroke({'from':(3,2),'to':(4,7),'isUp':True,'growing':False}),
+        fakeStroke({'from':(4,7),'to':(5,4),'isUp':False,'growing':False}),
+        fakeStroke({'from':(5,4),'to':(6,6),'isUp':True,'growing':False}),
+        fakeStroke({'from':(6,6),'to':(7,1),'isUp':False,'growing':False})
         ]
     s.makeupSegment()
     
@@ -831,13 +830,13 @@ def test_seg_split_xdown_c():
 def test_seg_split_xdown_qk_c():
     s = twine.KSeq('day',[])
     s._strokes = [
-        {'from':(0,9),'to':(1,6),'isUp':False,'growing':False},
-        {'from':(1,6),'to':(2,8),'isUp':True,'growing':False},
-        {'from':(2,8),'to':(3,2),'isUp':False,'growing':False},
-        {'from':(3,2),'to':(4,5),'isUp':True,'growing':False},
-        {'from':(4,5),'to':(5,3),'isUp':False,'growing':False},
-        {'from':(5,3),'to':(6,4),'isUp':True,'growing':False},
-        {'from':(6,4),'to':(7,1),'isUp':False,'growing':False}
+        fakeStroke({'from':(0,9),'to':(1,6),'isUp':False,'growing':False}),
+        fakeStroke({'from':(1,6),'to':(2,8),'isUp':True,'growing':False}),
+        fakeStroke({'from':(2,8),'to':(3,2),'isUp':False,'growing':False}),
+        fakeStroke({'from':(3,2),'to':(4,5),'isUp':True,'growing':False}),
+        fakeStroke({'from':(4,5),'to':(5,3),'isUp':False,'growing':False}),
+        fakeStroke({'from':(5,3),'to':(6,4),'isUp':True,'growing':False}),
+        fakeStroke({'from':(6,4),'to':(7,1),'isUp':False,'growing':False})
         ]
     s.makeupSegment()
     
@@ -864,14 +863,14 @@ def test_seg_split_xdown_qk_c():
 def test_seg_split_xdown_d():
     s = twine.KSeq('day',[])
     s._strokes = [
-        {'from':(0,9),'to':(1,5),'isUp':False,'growing':False},
-        {'from':(1,5),'to':(2,6),'isUp':True,'growing':False},
-        {'from':(2,6),'to':(3,2),'isUp':False,'growing':False},
-        {'from':(3,2),'to':(4,7),'isUp':True,'growing':False},
-        {'from':(4,7),'to':(5,4),'isUp':False,'growing':False},
-        {'from':(5,4),'to':(6,6),'isUp':True,'growing':False},
-        {'from':(6,6),'to':(7,3),'isUp':False,'growing':False},
-        {'from':(7,3),'to':(8,8),'isUp':True,'growing':False}
+        fakeStroke({'from':(0,9),'to':(1,5),'isUp':False,'growing':False}),
+        fakeStroke({'from':(1,5),'to':(2,6),'isUp':True,'growing':False}),
+        fakeStroke({'from':(2,6),'to':(3,2),'isUp':False,'growing':False}),
+        fakeStroke({'from':(3,2),'to':(4,7),'isUp':True,'growing':False}),
+        fakeStroke({'from':(4,7),'to':(5,4),'isUp':False,'growing':False}),
+        fakeStroke({'from':(5,4),'to':(6,6),'isUp':True,'growing':False}),
+        fakeStroke({'from':(6,6),'to':(7,3),'isUp':False,'growing':False}),
+        fakeStroke({'from':(7,3),'to':(8,8),'isUp':True,'growing':False})
         ]
     s.makeupSegment()
     
@@ -904,14 +903,14 @@ def test_seg_split_xdown_d():
 def test_seg_split_xdown_qk_d():
     s = twine.KSeq('day',[])
     s._strokes = [
-        {'from':(0,9),'to':(1,7),'isUp':False,'growing':False},
-        {'from':(1,7),'to':(2,8),'isUp':True,'growing':False},
-        {'from':(2,8),'to':(3,1),'isUp':False,'growing':False},
-        {'from':(3,1),'to':(4,5),'isUp':True,'growing':False},
-        {'from':(4,5),'to':(5,3),'isUp':False,'growing':False},
-        {'from':(5,3),'to':(6,4),'isUp':True,'growing':False},
-        {'from':(6,4),'to':(7,2),'isUp':False,'growing':False},
-        {'from':(7,2),'to':(8,6),'isUp':True,'growing':False}
+        fakeStroke({'from':(0,9),'to':(1,7),'isUp':False,'growing':False}),
+        fakeStroke({'from':(1,7),'to':(2,8),'isUp':True,'growing':False}),
+        fakeStroke({'from':(2,8),'to':(3,1),'isUp':False,'growing':False}),
+        fakeStroke({'from':(3,1),'to':(4,5),'isUp':True,'growing':False}),
+        fakeStroke({'from':(4,5),'to':(5,3),'isUp':False,'growing':False}),
+        fakeStroke({'from':(5,3),'to':(6,4),'isUp':True,'growing':False}),
+        fakeStroke({'from':(6,4),'to':(7,2),'isUp':False,'growing':False}),
+        fakeStroke({'from':(7,2),'to':(8,6),'isUp':True,'growing':False})
         ]
     s.makeupSegment()
     
@@ -940,18 +939,18 @@ def test_seg_split_xdown_qk_d():
 def test_seg_split_xdown_e():
     s = twine.KSeq('day',[])
     s._strokes = [
-        {'from':(0,10),'to':(1,5),'isUp':False,'growing':False},
-        {'from':(1,5),'to':(2,9),'isUp':True,'growing':False},
-        {'from':(2,9),'to':(3,4),'isUp':False,'growing':False},
-        {'from':(3,4),'to':(4,7),'isUp':True,'growing':False},
-        {'from':(4,7),'to':(5,6),'isUp':False,'growing':False},
-        {'from':(5,6),'to':(6,8),'isUp':True,'growing':False},
-        {'from':(6,8),'to':(7,1),'isUp':False,'growing':False},
-        {'from':(7,1),'to':(8,4),'isUp':True,'growing':False},
-        {'from':(8,4),'to':(9,2),'isUp':False,'growing':False},
-        {'from':(9,2),'to':(10,5),'isUp':True,'growing':False},
-        {'from':(10,5),'to':(11,3),'isUp':False,'growing':False},
-        {'from':(11,3),'to':(12,6),'isUp':True,'growing':False}
+        fakeStroke({'from':(0,10),'to':(1,5),'isUp':False,'growing':False}),
+        fakeStroke({'from':(1,5),'to':(2,9),'isUp':True,'growing':False}),
+        fakeStroke({'from':(2,9),'to':(3,4),'isUp':False,'growing':False}),
+        fakeStroke({'from':(3,4),'to':(4,7),'isUp':True,'growing':False}),
+        fakeStroke({'from':(4,7),'to':(5,6),'isUp':False,'growing':False}),
+        fakeStroke({'from':(5,6),'to':(6,8),'isUp':True,'growing':False}),
+        fakeStroke({'from':(6,8),'to':(7,1),'isUp':False,'growing':False}),
+        fakeStroke({'from':(7,1),'to':(8,4),'isUp':True,'growing':False}),
+        fakeStroke({'from':(8,4),'to':(9,2),'isUp':False,'growing':False}),
+        fakeStroke({'from':(9,2),'to':(10,5),'isUp':True,'growing':False}),
+        fakeStroke({'from':(10,5),'to':(11,3),'isUp':False,'growing':False}),
+        fakeStroke({'from':(11,3),'to':(12,6),'isUp':True,'growing':False})
         
         ]
     s.makeupSegment()
@@ -1004,15 +1003,15 @@ def test_seg_split_xdown_e():
 def test_seg_split_xdown_qk_e():
     s = twine.KSeq('day',[])
     s._strokes = [
-        {'from':(0,11),'to':(1,9),'isUp':False,'growing':False},
-        {'from':(1,9),'to':(2,10),'isUp':True,'growing':False},
-        {'from':(2,10),'to':(3,2),'isUp':False,'growing':False},
-        {'from':(3,2),'to':(4,6),'isUp':True,'growing':False},
-        {'from':(4,6),'to':(5,4),'isUp':False,'growing':False},
-        {'from':(5,4),'to':(6,8),'isUp':True,'growing':False},
-        {'from':(6,8),'to':(7,3),'isUp':False,'growing':False},
-        {'from':(7,3),'to':(8,5),'isUp':True,'growing':False},
-        {'from':(8,5),'to':(9,1),'isUp':False,'growing':False}
+        fakeStroke({'from':(0,11),'to':(1,9),'isUp':False,'growing':False}),
+        fakeStroke({'from':(1,9),'to':(2,10),'isUp':True,'growing':False}),
+        fakeStroke({'from':(2,10),'to':(3,2),'isUp':False,'growing':False}),
+        fakeStroke({'from':(3,2),'to':(4,6),'isUp':True,'growing':False}),
+        fakeStroke({'from':(4,6),'to':(5,4),'isUp':False,'growing':False}),
+        fakeStroke({'from':(5,4),'to':(6,8),'isUp':True,'growing':False}),
+        fakeStroke({'from':(6,8),'to':(7,3),'isUp':False,'growing':False}),
+        fakeStroke({'from':(7,3),'to':(8,5),'isUp':True,'growing':False}),
+        fakeStroke({'from':(8,5),'to':(9,1),'isUp':False,'growing':False})
         ]
     s.makeupSegment()
     
@@ -1040,15 +1039,15 @@ def test_seg_split_xdown_qk_e():
 def test_seg_split_xdown_f():
     s = twine.KSeq('day',[])
     s._strokes = [
-        {'from':(0,9),'to':(1,4),'isUp':False,'growing':False},
-        {'from':(1,4),'to':(2,8),'isUp':True,'growing':False},
-        {'from':(2,8),'to':(3,3),'isUp':False,'growing':False},
-        {'from':(3,3),'to':(4,6),'isUp':True,'growing':False},
-        {'from':(4,6),'to':(5,5),'isUp':False,'growing':False},
-        {'from':(5,5),'to':(6,7),'isUp':True,'growing':False},
-        {'from':(6,7),'to':(7,2),'isUp':False,'growing':False},
-        {'from':(7,2),'to':(8,6),'isUp':True,'growing':False},
-        {'from':(8,6),'to':(9,1),'isUp':False,'growing':False}        
+        fakeStroke({'from':(0,9),'to':(1,4),'isUp':False,'growing':False}),
+        fakeStroke({'from':(1,4),'to':(2,8),'isUp':True,'growing':False}),
+        fakeStroke({'from':(2,8),'to':(3,3),'isUp':False,'growing':False}),
+        fakeStroke({'from':(3,3),'to':(4,6),'isUp':True,'growing':False}),
+        fakeStroke({'from':(4,6),'to':(5,5),'isUp':False,'growing':False}),
+        fakeStroke({'from':(5,5),'to':(6,7),'isUp':True,'growing':False}),
+        fakeStroke({'from':(6,7),'to':(7,2),'isUp':False,'growing':False}),
+        fakeStroke({'from':(7,2),'to':(8,6),'isUp':True,'growing':False}),
+        fakeStroke({'from':(8,6),'to':(9,1),'isUp':False,'growing':False})      
         ]
     s.makeupSegment()
     
@@ -1090,15 +1089,15 @@ def test_seg_split_xdown_f():
 def test_seg_split_xdown_qk_f():
     s = twine.KSeq('day',[])
     s._strokes = [
-        {'from':(0,10),'to':(1,8),'isUp':False,'growing':False},
-        {'from':(1,8),'to':(2,9),'isUp':True,'growing':False},
-        {'from':(2,9),'to':(3,3),'isUp':False,'growing':False},
-        {'from':(3,3),'to':(4,6),'isUp':True,'growing':False},
-        {'from':(4,6),'to':(5,4),'isUp':False,'growing':False},
-        {'from':(5,4),'to':(6,7),'isUp':True,'growing':False},
-        {'from':(6,7),'to':(7,2),'isUp':False,'growing':False},
-        {'from':(7,2),'to':(8,3),'isUp':True,'growing':False},
-        {'from':(8,3),'to':(9,1),'isUp':False,'growing':False}
+        fakeStroke({'from':(0,10),'to':(1,8),'isUp':False,'growing':False}),
+        fakeStroke({'from':(1,8),'to':(2,9),'isUp':True,'growing':False}),
+        fakeStroke({'from':(2,9),'to':(3,3),'isUp':False,'growing':False}),
+        fakeStroke({'from':(3,3),'to':(4,6),'isUp':True,'growing':False}),
+        fakeStroke({'from':(4,6),'to':(5,4),'isUp':False,'growing':False}),
+        fakeStroke({'from':(5,4),'to':(6,7),'isUp':True,'growing':False}),
+        fakeStroke({'from':(6,7),'to':(7,2),'isUp':False,'growing':False}),
+        fakeStroke({'from':(7,2),'to':(8,3),'isUp':True,'growing':False}),
+        fakeStroke({'from':(8,3),'to':(9,1),'isUp':False,'growing':False})
         ]
     s.makeupSegment()
     
