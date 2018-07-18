@@ -192,7 +192,7 @@ def resolveSeg(strokes,begin,end, segs ,currentSeg = None, prevSeg = None):
                 while True:
                     if i > (end-begin): break
                     if i==(end-begin):
-                        currentSeg.grows(currentTrait,i)
+                        currentSeg.grows(currentTrait,i-iPeak)
                         return
 
                     nextTrait = strokes[begin+i].to_dict()
@@ -227,7 +227,7 @@ def resolveSeg(strokes,begin,end, segs ,currentSeg = None, prevSeg = None):
                         iPeak += (2 if (not prevTrait['hops']) else prevTrait['hops']+1)
                     elif t == 'up':#case 2
                         hops = prevTrait['hops']+1 if 'hops' in prevTrait else 2
-                        
+
                         nextSeg = Segment(strokes,begin+iPeak,begin+i+1)
                         if currentTrait['to'][1] >= currentSeg.lastPeak:
                             #first stroke breaks previous segment       
@@ -265,7 +265,7 @@ def resolveSeg(strokes,begin,end, segs ,currentSeg = None, prevSeg = None):
                         currentTrait = nextTrait
                         currentSeg.grows(prevTrait)
                         i += 2
-                        iPeak += (2 if (not prevTrait['hops']) else prevTrait['hops']+1)
+                        iPeak += (2 if ('hops' not in prevTrait) else prevTrait['hops']+1)
                 elif t == 'inclusion' and strokes[begin+i]['to'][1] <= currentTrait['to'][1]:#included in left
                     hops = currentTrait['hops']+2 if 'hops' in currentTrait else 3
                     currentTrait = { 'from':currentTrait['from'], 'to':strokes[begin+i]['to'],'hops':hops}
@@ -276,7 +276,7 @@ def resolveSeg(strokes,begin,end, segs ,currentSeg = None, prevSeg = None):
                     currentTrait = nextTrait
                     currentSeg.grows(currentTrait)
                     i += 2
-                    iPeak += (2 if (not prevTrait['hops'] ) else prevTrait['hops']+1)
+                    iPeak += (2 if ('hops' not in prevTrait ) else prevTrait['hops']+1)
                 elif t == 'up':#bottom
                     if nextTrait['to'][1] <= currentSeg.firstStroke['from'][1]:
                         nextSeg = Segment(strokes,begin+iPeak,begin+i+1)                      

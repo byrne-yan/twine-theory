@@ -68,7 +68,7 @@ class KSeq:
 
             if len(klist) > 0 and type(klist[0]) is tuple:
                 for k in klist:
-                    self._seq.append(K(k[0], k[1], k[2], k[3], k[4], k[5]))
+                    self._seq.append(K(k[0], k[1], k[2], k[3], k[4], k[5]))#date,open,high,close,low,volume
 
         self._low = float('+inf')
         self._high = float('-inf')

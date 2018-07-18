@@ -67,6 +67,13 @@ class Stroke:
         if name == 'hops':
             self._trick[name] = value
         return supper().__setitem__(index)
+
+    def __contains__(self, index):
+        if index == 'isUp'or index == 'from' or index == 'to' or index == 'growing':
+           return True
+        elif index == 'hops':
+            return index in self._trick
+        return False
     
     def __getitem__(self,index):
         if index == 'isUp':
@@ -119,6 +126,7 @@ def resolve_strokes(kseq,begin,end,strokes,currentStroke=None):
 
 ##        import pdb;pdb.set_trace()
         if currentStroke.direction=='up':
+##            import pdb;pdb.set_trace()
             lastK = currentStroke.lastK
             lastPeak = begin
             for i in range(begin+1,end):
@@ -132,7 +140,7 @@ def resolve_strokes(kseq,begin,end,strokes,currentStroke=None):
                    if nextStroke:
                        currentStroke.mature(nextStroke)
                        strokes.append(nextStroke)
-                       return resolve_strokes(kseq,i+nextStroke.size,end,strokes,nextStroke)
+                       return resolve_strokes(kseq,i+nextStroke.size-2,end,strokes,nextStroke)
         else:#down
             lastK = currentStroke.lastK
             lastPeak = begin
@@ -147,7 +155,7 @@ def resolve_strokes(kseq,begin,end,strokes,currentStroke=None):
                    if nextStroke :  #bottom
                        currentStroke.mature(nextStroke)
                        strokes.append(nextStroke)
-                       return resolve_strokes(kseq,i-1+nextStroke.size,end,strokes,nextStroke)
+                       return resolve_strokes(kseq,i+nextStroke.size-2,end,strokes,nextStroke)
         
 def testStroke(kseq,begin,end,direction):
     if end-begin < 5:
