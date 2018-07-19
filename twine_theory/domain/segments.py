@@ -204,7 +204,7 @@ def resolveSeg(strokes,begin,end, segs ,currentSeg = None, prevSeg = None):
                         currentTrait = nextTrait
                         currentSeg.grows(prevTrait)
                         i += 2
-                        iPeak += (2 if (not prevTrait['hops']) else prevTrait['hops']+1)
+                        iPeak += (2 if ('hops' not in prevTrait) else prevTrait['hops']+1)
                     elif t == 'inclusion' and nextTrait['to'][1] <= currentTrait['to'][1]:#included in left
                         if currentTrait['to'][1] > currentSeg.firstStroke['from'][1] and \
                            strokes[begin+i]['to'][1] > currentSeg.firstStroke['from'][1]:
@@ -226,7 +226,7 @@ def resolveSeg(strokes,begin,end, segs ,currentSeg = None, prevSeg = None):
                         currentTrait = nextTrait
                         currentSeg.grows(prevTrait)
                         i += 2
-                        iPeak += (2 if (not prevTrait['hops']) else prevTrait['hops']+1)
+                        iPeak += (2 if ('hops' not in prevTrait) else prevTrait['hops']+1)
                     elif t == 'up':#case 2
                         hops = prevTrait['hops']+1 if 'hops' in prevTrait else 2
 

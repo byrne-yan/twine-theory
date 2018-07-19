@@ -61,8 +61,6 @@ class Stroke:
         elif attr == 'size':
             return self._end-self._begin
 
-        super().__getattr__(key)
-
     def __setitem__(self,name,value):
         if name == 'hops':
             self._trick[name] = value
@@ -177,23 +175,23 @@ def testStroke(kseq,begin,end,direction):
         count = 1
         for i in range(begin+1,end):
             currentK = kseq[i]
-            if currentK['low'] < base:
-                return
             count += 1
             if currentK['high'] > lastK['high']:
                 if count >= 5:
                     return Stroke(kseq,begin,i+1)
                 lastK = currentK
+            if currentK['low'] < base:
+                return
     else:
         base = kseq[begin]['high']
         lastK = kseq[begin]
         count = 1
         for i in range(begin+1,end):
             currentK = kseq[i]
-            if currentK['high'] > base:
-                return
             count += 1
             if currentK['low'] < lastK['low']:
                 if count >= 5:
                     return Stroke(kseq,begin,i+1)
                 lastK = currentK
+            if currentK['high'] > base:
+                return

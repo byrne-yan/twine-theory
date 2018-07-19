@@ -18,16 +18,36 @@ if __name__ == "__main__":
     st = pd.read_csv(stock,parse_dates=['date'],dtype={'code':str},index_col='date')
     seq = tt.KSeq('day', st)
 
-    dlist = [st.iloc[s['from'][0]].name for s in seq._bi] + [st.iloc[seq._bi[0]['to'][0]].name]
+    dlist = [k['time'] for k in seq._seq]
+    
+    dlist1 = [st.iloc[s['from'][0]].name for s in seq._strokes] + [st.iloc[seq._strokes[-1]['to'][0]].name]
+    stroke = pd.DataFrame(data=[s['from'][1] for s in seq._strokes] + [seq._strokes[-1]['to'][1]],index = dlist1,columns=['stroke'])
+    stroke.to_csv(stockFile.parent / (stockFile.stem + '_stroke.csv'))
 
-    stroke = pd.DataFrame(data=[s['from'][1] for s in seq._bi] + [seq._bi[-1]['to'][1]],index = dlist,columns=['storke'])
+    if len(seq._segment) > 0:
+        dlist2 = [st.iloc[s['from'][0]].name for s in seq._segment] + [st.iloc[seq._segment[-1]['to'][0]].name]
+        segment = pd.DataFrame(data=[s['from'][1] for s in seq._segment] + [seq._segment[-1]['to'][1]],index = dlist2,columns=['segment'])
 
-    dlist2 = [st.iloc[s['from'][0]].name for s in seq._segment] + [st.iloc[seq._segment[0]['to'][0]].name]
-    segment = pd.DataFrame(data=[s['from'][1] for s in seq._segment] + [seq._segment[-1]['to'][1]],index = dlist2,columns=['sgement'])
+        segment.to_csv(stockFile.parent / (stockFile.stem + '_segment.csv'))
 
-    stroke.to_csv(stockFile.parent / (stockFile.stem + '_stroke.csv'),index=False)
-    segment.to_csv(stockFile.parent / (stockFile.stem + '_segment.csv'),index=False)
-
+##    import pdb;pdb.set_trace()
+    b = [ k['low'] for k in seq._seq]
+    h = [ k['high']-k['low'] for k in seq._seq]
+    
+    fig,ax = plt.subplots(figsize = (10,5))
+    ax.bar(dlist,height=h,width=0.8,bottom =b,align='center',color='grey')
+    ax.plot(stroke,color='b')
+    if len(seq._segment) > 0:
+        ax.plot(segment,color='r')
+    prev = None
+    for stk in stroke.itertuples():
+        if prev is not None:
+            v = 5
+            if prev.stroke > stk.stroke:
+                v = -15
+            ax.annotate(stk.stroke,xy=(stk.Index,stk.stroke),xytext=(0,v),ha='center', textcoords ='offset pixels')
+        prev = stk
+    plt.savefig(str(stockFile.parent / (stockFile.stem+'_draw.png')))
     if(len(sys.argv)>=3):
-        stroke.join(segment).interpolate(method ='index',limit_area='inside').plot()
+        #stroke.join(segment).interpolate(method ='index',limit_area='inside').plot()
         plt.show()

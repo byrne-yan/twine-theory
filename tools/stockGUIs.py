@@ -10,8 +10,8 @@ DEFAULT = {
     'lineWidth': 1,  # px
     'biColor':'b',
     'segmentColor':'r',
-    'showStick':False,
-    'showMerge':False,
+    'showStick':True,
+    'showMerge':True,
     'showStroke':True,
     'showSegment':True,
     'showTwine':True
