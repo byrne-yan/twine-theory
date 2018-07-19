@@ -138,8 +138,9 @@ def resolveSeg(strokes,begin,end, segs ,currentSeg = None, prevSeg = None):
                 while True:
                     if i > (end-begin): break
                     if i==(end-begin):
-                        currentSeg.grows(currentTrait,i)
-                        break
+                        if currentSeg['to'][1] < strokes[end-1]['to'][1]:
+                            currentSeg.grows(currentTrait,i)
+                        return
                     
                     nextTrait = strokes[begin+i].to_dict()
                     t = strokes_dir(currentTrait['from'][1],currentTrait['to'][1],nextTrait['from'][1],nextTrait['to'][1])
@@ -192,7 +193,8 @@ def resolveSeg(strokes,begin,end, segs ,currentSeg = None, prevSeg = None):
                 while True:
                     if i > (end-begin): break
                     if i==(end-begin):
-                        currentSeg.grows(currentTrait,i-iPeak)
+                        if currentSeg['to'][1] > strokes[end-1]['to'][1]:
+                            currentSeg.grows(currentTrait,i-iPeak)
                         return
 
                     nextTrait = strokes[begin+i].to_dict()

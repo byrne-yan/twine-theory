@@ -126,36 +126,47 @@ def resolve_strokes(kseq,begin,end,strokes,currentStroke=None):
 
 ##        import pdb;pdb.set_trace()
         if currentStroke.direction=='up':
-##            import pdb;pdb.set_trace()
             lastK = currentStroke.lastK
             lastPeak = begin
+            noDown = False
             for i in range(begin+1,end):
                currentK = kseq[i]
                if currentK['high'] > currentStroke.lastK['high']:#stroke continues
                    currentStroke.grows(i-lastPeak)
                    lastPeak = i
                    lastK = currentK
+                   noDown = False
                else: #top candidates
-                   nextStroke = testStroke(kseq,i-1,end,'down')
-                   if nextStroke:
-                       currentStroke.mature(nextStroke)
-                       strokes.append(nextStroke)
-                       return resolve_strokes(kseq,i+nextStroke.size-2,end,strokes,nextStroke)
+                   if not noDown:
+                        nextStroke = testStroke(kseq,i-1,end,'down')
+                        if nextStroke:
+                            currentStroke.mature(nextStroke)
+                            strokes.append(nextStroke)
+                            return resolve_strokes(kseq,i+nextStroke.size-2,end,strokes,nextStroke)
+                        else:
+                            noDown = True
         else:#down
             lastK = currentStroke.lastK
             lastPeak = begin
+            noUp = False
             for i in range(begin+1,end):
-               currentK = kseq[i]
-               if currentK['low'] < currentStroke.lastK['low']:#stroke continues
-                   currentStroke.grows(i-lastPeak)
-                   lastPeak = i
-                   lastK = currentK
-               else: #bottom condidates
-                   nextStroke = testStroke(kseq,i-1,end,'up')
-                   if nextStroke :  #bottom
-                       currentStroke.mature(nextStroke)
-                       strokes.append(nextStroke)
-                       return resolve_strokes(kseq,i+nextStroke.size-2,end,strokes,nextStroke)
+                currentK = kseq[i]
+                if currentK['low'] < currentStroke.lastK['low']:#stroke continues
+                    currentStroke.grows(i-lastPeak)
+                    lastPeak = i
+                    lastK = currentK
+                    noUp = False
+                else: #bottom condidates
+                    if not noUp:
+                        nextStroke = testStroke(kseq,i-1,end,'up')
+                        if nextStroke :  #bottom
+                            currentStroke.mature(nextStroke)
+                            strokes.append(nextStroke)
+                            return resolve_strokes(kseq,i+nextStroke.size-2,end,strokes,nextStroke)
+                        else:
+                             noUp= True
+                        
+                        
         
 def testStroke(kseq,begin,end,direction):
     if end-begin < 5:

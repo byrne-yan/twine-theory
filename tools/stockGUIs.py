@@ -10,9 +10,9 @@ DEFAULT = {
     'lineWidth': 1,  # px
     'biColor':'b',
     'segmentColor':'r',
-    'showStick':True,
-    'showMerge':True,
-    'showBi':True,
+    'showStick':False,
+    'showMerge':False,
+    'showStroke':True,
     'showSegment':True,
     'showTwine':True
 }
@@ -100,8 +100,9 @@ class StickWidget(pg.PlotItem):
                         mergedFound = i
                         baseX = self.baseX
 
-        if self.style['showBi']:
-            self.addItem(self.mkBiCurve(kseq))
+        if self.style['showStroke']:
+            for p in self.mkStrokeCurve(kseq):
+                self.addItem(p)
 
         if self.style['showSegment']:
             for p in self.mkSegmentCurve(kseq):
@@ -143,18 +144,30 @@ class StickWidget(pg.PlotItem):
                                  y=[high, high, low, low, high], pen=p)
         return [stick]
 
-    def mkBiCurve(self,kseq):
+    def mkStrokeCurve(self,kseq):
         #import pdb;pdb.set_trace()
         p = pg.mkPen(self.style['biColor'], width=self.style['lineWidth'])
+        p2 = pg.mkPen(self.style['biColor'], width=self.style['lineWidth'], style=pg.QtCore.Qt.DashLine)
 
         x = [kseq._strokes[0]['from'][0]*(self.style['gap']+self.style['width'])+self.style['gap']+self.style['width']/2]
         y = [kseq._strokes[0]['from'][1]]
-        for i in range(0,len(kseq._strokes)):
+        for i in range(0,len(kseq._strokes)-1):
             x.append(kseq._strokes[i]['to'][0]*(self.style['gap']+self.style['width'])+self.style['gap']+self.style['width']/2)
             y.append(kseq._strokes[i]['to'][1])
 
-       
-        return pg.PlotCurveItem(x, y, pen=p)
+        if kseq._strokes[-1]['growing']:
+            if 1==len(kseq._strokes):
+                x2 = [kseq._strokes[-1]['from'][0]*(self.style['gap']+self.style['width'])+self.style['gap']+self.style['width']/2,
+                      kseq._strokes[-1]['to'][0]*(self.style['gap']+self.style['width'])+self.style['gap']+self.style['width']/2]
+                y2 = [kseq._strokes[-1]['from'][1],kseq._strokes[-1]['to'][1]]
+                return [pg.PlotCurveItem(x2, y2, pen=p2)]
+            else:
+                x2 = [kseq._strokes[-2]['to'][0]*(self.style['gap']+self.style['width'])+self.style['gap']+self.style['width']/2,
+                      kseq._strokes[-1]['to'][0]*(self.style['gap']+self.style['width'])+self.style['gap']+self.style['width']/2]
+                y2 = [kseq._strokes[-2]['to'][1],kseq._strokes[-1]['to'][1]]
+                return [pg.PlotCurveItem(x, y, pen=p),pg.PlotCurveItem(x2, y2, pen=p2)]
+        else:
+            return [pg.PlotCurveItem(x, y, pen=p)]
 
     def mkSegmentCurve(self,kseq):
         if kseq._segment and len(kseq._segment):
