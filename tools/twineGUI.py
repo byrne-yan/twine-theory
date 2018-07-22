@@ -22,9 +22,14 @@ if __name__ == "__main__":
 
     if len(sys.argv) >= 2:
         ks = pd.read_csv(sys.argv[1],parse_dates=['date'],index_col='date',dtype={"code":str})
-        #倒置
-##        ks = ks.sort_values('date')
-        view.addItem(createWidget(ks))
+        start = 0
+        end = len(ks)
+        if len(sys.argv)>=3:
+            start = int(sys.argv[2])
+        if len(sys.argv)>=4:
+            end = int(sys.argv[3])
+        print("Total: %d" % (end-start))
+        view.addItem(createWidget(ks[start:end]))
         view.setBackground('w')
 
         app.exec_()

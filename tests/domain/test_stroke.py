@@ -405,16 +405,22 @@ def test_strokes_spliting_11():
         ]
 
     ks = twine.KSeq('day',ks)
-    assert len(ks._strokes) == 2
+    assert len(ks._strokes) == 3
     assert ks._strokes[0].to_dict() == {'from':(0,2),
-                        'to':(4,9),
+                        'to':(11,11),
                         'isUp':True,
                         'growing':False
                         }
     assert ks._strokes[1].to_dict() =={
-                        'from':(4,9),
-                        'to':(8,3),
+                        'from':(11,11),
+                        'to':(15,4),
                         'isUp':False,
+                        'growing':False
+                        }
+    assert ks._strokes[2].to_dict() =={
+                        'from':(15,4),
+                        'to':(19,10),
+                        'isUp':True,
                         'growing':True
                         }
 
@@ -463,3 +469,4 @@ def test_strokes_spliting_12():
                         'isUp':False,
                         'growing':True
                         }
+

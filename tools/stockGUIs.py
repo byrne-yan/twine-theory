@@ -145,6 +145,8 @@ class StickWidget(pg.PlotItem):
         return [stick]
 
     def mkStrokeCurve(self,kseq):
+        if len(kseq._strokes)<=0:
+            return []
         #import pdb;pdb.set_trace()
         p = pg.mkPen(self.style['biColor'], width=self.style['lineWidth'])
         p2 = pg.mkPen(self.style['biColor'], width=self.style['lineWidth'], style=pg.QtCore.Qt.DashLine)

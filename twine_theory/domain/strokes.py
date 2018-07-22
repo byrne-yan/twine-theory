@@ -60,6 +60,10 @@ class Stroke:
             return self.direction=='up'
         elif attr == 'size':
             return self._end-self._begin
+        elif attr == 'begin':
+            return self._begin
+        elif attr == 'end':
+            return self._end
 
     def __setitem__(self,name,value):
         if name == 'hops':
@@ -86,7 +90,7 @@ class Stroke:
             return self._trick[index] if index in self._trick else None
         #return supper().__getitem__(index)
         
-def resolve_strokes(kseq,begin,end,strokes,currentStroke=None):
+def resolve_strokes(kseq,begin,end,strokes,currentStroke=None,prevStroke=None):
     assert(len(kseq)>=begin)
     if currentStroke is None:
         if end-begin<5:
@@ -140,9 +144,20 @@ def resolve_strokes(kseq,begin,end,strokes,currentStroke=None):
                         if nextStroke:
                             currentStroke.mature(nextStroke)
                             strokes.append(nextStroke)
-                            return resolve_strokes(kseq,i+nextStroke.size-2,end,strokes,nextStroke)
+                            return resolve_strokes(kseq,i+nextStroke.size-2,end,strokes,nextStroke,currentStroke)
                         else:
-                            noDown = True
+                            if prevStroke:
+                                nextStroke = testStroke2(kseq,i-1,end,'down',prevStroke.lastK['low'])
+                                if nextStroke:
+                                    prevStroke.grows(nextStroke.begin-currentStroke.begin);
+                                    prevStroke.mature(nextStroke)
+                                    strokes.remove(currentStroke)
+                                    strokes.append(nextStroke)
+                                    return resolve_strokes(kseq,nextStroke.end-1,end,strokes,nextStroke,prevStroke)
+                                else:
+                                    noDown = True
+                            else:
+                                noDown = True
         else:#down
             lastK = currentStroke.lastK
             lastPeak = begin
@@ -160,9 +175,20 @@ def resolve_strokes(kseq,begin,end,strokes,currentStroke=None):
                         if nextStroke :  #bottom
                             currentStroke.mature(nextStroke)
                             strokes.append(nextStroke)
-                            return resolve_strokes(kseq,i+nextStroke.size-2,end,strokes,nextStroke)
+                            return resolve_strokes(kseq,i+nextStroke.size-2,end,strokes,nextStroke,currentStroke)
                         else:
-                             noUp= True
+                            if prevStroke:
+                                nextStroke = testStroke2(kseq,i-1,end,'up',prevStroke.lastK['high'])
+                                if nextStroke:
+                                    prevStroke.grows(nextStroke.begin-currentStroke.begin);
+                                    prevStroke.mature(nextStroke)
+                                    strokes.remove(currentStroke)
+                                    strokes.append(nextStroke)
+                                    return resolve_strokes(kseq,nextStroke.end-1,end,strokes,nextStroke,prevStroke)
+                                else:
+                                    noUp= True
+                            else:
+                                noUp= True
                         
                         
         
@@ -195,3 +221,19 @@ def testStroke(kseq,begin,end,direction):
                 lastK = currentK
             if currentK['high'] > base:
                 return
+def testStroke2(kseq,begin,end,direction,prevStrokePeak):
+    if direction == 'up':
+        for i in range(begin+1,min(end,begin+4)):
+            currentK = kseq[i]
+            
+            if currentK['high'] > prevStrokePeak:
+                nextStroke = testStroke(kseq,i,end,'down')
+                if nextStroke:
+                    return nextStroke
+    else:
+        for i in range(begin+1,min(end,begin+4)):
+            currentK = kseq[i]
+            if currentK['low'] < prevStrokePeak:
+                nextStroke = testStroke(kseq,i,end,'up')
+                if nextStroke:
+                    return nextStroke
