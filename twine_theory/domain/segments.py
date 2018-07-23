@@ -118,6 +118,7 @@ def resolveSeg(strokes,begin,end, segs ,currentSeg = None, prevSeg = None):
             #first segment
             i = 0
             while i < (end-begin):
+                
                 nextSeg = locateSimpleSeg(strokes,begin+i)
                 if not nextSeg:
                     i += 1
@@ -128,6 +129,7 @@ def resolveSeg(strokes,begin,end, segs ,currentSeg = None, prevSeg = None):
             segs.append(nextSeg)
             return resolveSeg(strokes,begin+i+nextSeg.numOfStrokes,end,segs,nextSeg)
         else:
+##            import pdb;pdb.set_trace()
             prevTrait = currentSeg.lastTrait
             if currentSeg: isUp = currentSeg.direction == 'up'
             else: isUp = strokes[begin]['isUp']
@@ -179,12 +181,12 @@ def resolveSeg(strokes,begin,end, segs ,currentSeg = None, prevSeg = None):
                         hops = prevTrait['hops']+1 if 'hops' in prevTrait else 2
                         
                         nextSeg = Segment(strokes,begin+iPeak,begin+i+1)
-                        if currentTrait['to'][1] <= currentSeg.lastPeak:
-                            #first stroke breaks previous segment       
+                        if currentTrait['to'][1] <= currentSeg.lastPeak or nextTrait['to'][1] < currentSeg['from'][1]:
+                            #first stroke breaks previous segment or next segment breaks entire previous segment                            
                             currentSeg.mature(nextSeg)
                             segs.append(nextSeg)
                             return resolveSeg(strokes,begin+i+1,end,segs,nextSeg)
-                        else:
+                        else :
                             return resolveSeg(strokes,begin+i+1,end,segs,nextSeg,currentSeg)
                         
             else: #down case

@@ -1112,3 +1112,24 @@ def test_seg_split_xdown_qk_f():
 
 
     
+def test_seg_split_compound_1():
+    import pandas as pd
+    df = pd.read_csv('./tests/fixtures/000002_30m_stroke.csv',header=0,names=['date','stroke'])
+    s = twine.KSeq('30m',[])
+    s._strokes = []
+    t0 = None
+    for t in df.itertuples():
+        if t0 is not None:
+            up = True if t.stroke>t0.stroke else False
+            s._strokes.append(fakeStroke({
+                'from':(t0.Index,t0.stroke),
+                'to':(t.Index,t.stroke),
+                'isUp':up,
+                'growing':False}))
+        t0 = t
+
+    
+
+    s.makeupSegment()
+    assert(6 == len(s._segment))
+        

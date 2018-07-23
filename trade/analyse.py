@@ -45,7 +45,7 @@ if __name__ == "__main__":
             v = 5
             if prev.stroke > stk.stroke:
                 v = -15
-            ax.annotate(stk.stroke,xy=(stk.Index,stk.stroke),xytext=(0,v),ha='center', textcoords ='offset pixels')
+            ax.annotate("%.2f" % stk.stroke,xy=(stk.Index,stk.stroke),xytext=(0,v),ha='center', textcoords ='offset pixels')
         prev = stk
     plt.savefig(str(stockFile.parent / (stockFile.stem+'_draw.png')))
     if(len(sys.argv)>=3):
