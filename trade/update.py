@@ -1,6 +1,7 @@
 ##
 import sys
 import os
+import numpy as np
 import pandas as pd
 import tushare as ts
 from pathlib import Path
@@ -93,24 +94,26 @@ def merge(stock,scode,week,day,m30,m5):
                                    
 if __name__ == "__main__":
     if len(sys.argv) < 2:
-        print("usage:update stock_dir")
+        print("usage:update stock_dir [code]")
         exit()
     stocksDir = sys.argv[1]
     rootdir = Path(sys.argv[1])
     if not rootdir.is_dir():
         print("%s must be a direcory!" % rootdir)
         exit()
-    
-    tracks = pd.read_excel(str(rootdir / 'tracks.xlsx'),dtype={'code':str})
-    basicsFile = rootdir / 'basics.xlsx'
 
-    basics = None
-    if basicsFile.exists():
-        basics = pd.read_excel(basicsFile,dtype={'code':str})
-    if basics is None or basics.empty:
-        basics = ts.get_stock_basics()
-        basics.to_excel(str(rootdir / 'basics.xlsx'))
-    
+    if len(sys.argv)<3:        
+        tracks = pd.read_excel(str(rootdir / 'tracks.xlsx'),dtype={'code':str})
+        basicsFile = rootdir / 'basics.xlsx'
+
+        basics = None
+        if basicsFile.exists():
+            basics = pd.read_excel(basicsFile,dtype={'code':str})
+        if basics is None or basics.empty:
+            basics = ts.get_stock_basics()
+            basics.to_excel(str(rootdir / 'basics.xlsx'))
+    else:
+        tracks = pd.DataFrame({'code':[sys.argv[2]],'isIndex':[np.NaN]})
     for i in range(0,len(tracks)):
         st = tracks.iloc[i]
 ##        scode = "%06d" % st.code
@@ -125,13 +128,13 @@ if __name__ == "__main__":
 ##        import pdb;pdb.set_trace()        
         stock = loadStock(rootdir,scode)
         if stock:
-            startTimeW = stock['lastTime'][0]
-            startTimeD = stock['lastTime'][1]
-            startTime30 = stock['lastTime'][2]
-            startTime5 = stock['lastTime'][3]
+            startTimeW = "%d-%02d-%02d" % (stock['lastTime'][0].year,stock['lastTime'][0].month,stock['lastTime'][0].day)
+            startTimeD = "%d-%02d-%02d" % (stock['lastTime'][1].year,stock['lastTime'][1].month,stock['lastTime'][1].day)
+            startTime30 = "%d-%02d-%02d %02d:%02d" % (stock['lastTime'][2].year,stock['lastTime'][2].month,stock['lastTime'][2].day,stock['lastTime'][2].hour,stock['lastTime'][2].minute)
+            startTime5 = "%d-%02d-%02d %02d:%02d" % (stock['lastTime'][3].year,stock['lastTime'][3].month,stock['lastTime'][3].day,stock['lastTime'][3].hour,stock['lastTime'][3].minute)
             
 ##        import pdb;pdb.set_trace()
-
+        
         kdata_w = ts.get_k_data(code=scode,index=isIndex,start=str(startTimeW), ktype='W')
         kdata_d = ts.get_k_data(code=scode,index=isIndex,start=str(startTimeD),ktype='D')
         kdata_30 = ts.get_k_data(code=scode,index=isIndex,start=str(startTime30),ktype='30')
