@@ -237,8 +237,8 @@ def resolveSeg(strokes,begin,end, segs ,currentSeg = None, prevSeg = None):
                         hops = prevTrait['hops']+1 if 'hops' in prevTrait else 2
 
                         nextSeg = Segment(strokes,begin+iPeak,begin+i+1)
-                        if currentTrait['to'][1] >= currentSeg.lastPeak:
-                            #first stroke breaks previous segment       
+                        if currentTrait['to'][1] >= currentSeg.lastPeak or nextTrait['to'][1] > currentSeg['from'][1]:
+                            #first stroke breaks previous segment or next segment breaks entire previous segment                              
                             currentSeg.mature(nextSeg)
                             segs.append(nextSeg)
                             return resolveSeg(strokes,begin+i+1,end,segs,nextSeg)
