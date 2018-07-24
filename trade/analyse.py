@@ -30,11 +30,34 @@ if __name__ == "__main__":
 
         segment.to_csv(stockFile.parent / (stockFile.stem + '_segment.csv'))
 
-##    import pdb;pdb.set_trace()
+
     b = [ k['low'] for k in seq._seq]
     h = [ k['high']-k['low'] for k in seq._seq]
+
+    delta = st.iloc[1].name - st.iloc[0].name
+    level = ""
+    if delta.resolution == 'D':
+        if delta.days > 1:
+            level = u"周线图"
+        else:
+            level = u"日线图"
+    else:
+        minutes = int(delta.seconds / 60)
+        if minutes >= 60:
+            level = u"60分钟图"
+        elif minutes >= 30:
+            level = u"30分钟图"
+        elif  minutes >= 5:
+            level = u"5分钟图"
+        else:
+            level = u"1分钟图"
     
-    fig,ax = plt.subplots(figsize = (10,5))
+    fig,ax = plt.subplots(figsize = (12,5))
+    plt.rcParams['font.sans-serif']=['SimHei']
+    plt.rcParams['axes.unicode_minus']=False
+    ax.set(xlabel=u'日期/时间', ylabel=u'价格/指数',
+           title= "%s %s" % (st.iloc[0].code,level))
+    
     ax.bar(dlist,height=h,width=0.8,bottom =b,align='center',color='grey')
     ax.plot(stroke,color='b')
     if len(seq._segment) > 0:
