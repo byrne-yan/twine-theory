@@ -48,7 +48,7 @@ def loadStock(rootdir,scode):
 def updateStock(rootdir,scode,stock):
     local = Path(rootdir / scode)
     if not local.is_dir():
-        os.makedirs(local)
+        os.makedirs(str(local))
         
     name = scode+'_w.csv'
     p_week = Path(local / name)

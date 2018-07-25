@@ -1154,3 +1154,30 @@ def test_seg_split_compound_2():
     s.makeupSegment()
     assert(4 == len(s._segment))
     
+def test_seg_split_compound_3():
+    import pandas as pd
+    df = pd.read_csv('./tests/fixtures/300141_d_stroke.csv',header=0,names=['date','stroke'])
+    s = twine.KSeq('day',[])
+    s._strokes = []
+    t0 = None
+    for t in df.itertuples():
+        if t0 is not None:
+            up = True if t.stroke>t0.stroke else False
+            s._strokes.append(fakeStroke({
+                'from':(t0.Index,t0.stroke),
+                'to':(t.Index,t.stroke),
+                'isUp':up,
+                'growing':False}))
+        t0 = t
+
+    
+
+    s.makeupSegment()
+    assert(8 == len(s._segment))
+    assert(eval(str(s._segment[-1])) == {
+        'from': (34,19.751),
+        'to': (47,7.18),
+        'isUp': False,
+        'bi': [34,35,36,37,38,39,40,41,42,43,44,45,46],
+        'growing':True
+        })  

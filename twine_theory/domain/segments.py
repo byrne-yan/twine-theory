@@ -137,11 +137,11 @@ def resolveSegCase2_down(strokes,begin,end, segs ,currentSeg, prevSeg):
                 currentSeg.grows(prevTrait)
                 i += 2
                 iPeak += (2 if ('hops' not in prevTrait) else prevTrait['hops']+1)
-        elif t == 'inclusion' and strokes[begin+i]['to'][1] <= currentTrait['to'][1]:#included in left
+        elif t == 'inclusion' and nextTrait['to'][1] <= currentTrait['to'][1]:#included in left
             hops = currentTrait['hops']+2 if 'hops' in currentTrait else 3
             currentTrait = { 'from':currentTrait['from'], 'to':strokes[begin+i]['to'],'hops':hops}
             i += 2
-        elif t == 'inclusion' and strokes[begin+i]['to'][1] < currentTrait['to'][1]:#case 3：included in right
+        elif t == 'inclusion' and nextTrait['to'][1] > currentTrait['to'][1]:#case 3：included in right
             #same as 'down'
             prevTrait = currentTrait
             currentTrait = nextTrait
@@ -191,11 +191,11 @@ def resolveSegCase2_up(strokes,begin,end, segs ,currentSeg, prevSeg):
                 currentSeg.grows(prevTrait)
                 i += 2
                 iPeak += (2 if ('hops' not in prevTrait) else prevTrait['hops']+1)
-        elif t == 'inclusion' and strokes[begin+i]['to'][1] >= currentTrait['to'][1]:#included in left
+        elif t == 'inclusion' and nextTrait['to'][1] >= currentTrait['to'][1]:#included in left
             hops = currentTrait['hops']+2 if 'hops' in currentTrait else 3
             currentTrait = { 'from':currentTrait['from'], 'to':strokes[begin+i]['to']}
             i += 2
-        elif t == 'inclusion' and strokes[begin+i]['to'][1] < currentTrait['to'][1]:#case 3：included in right
+        elif t == 'inclusion' and nextTrait['to'][1] < currentTrait['to'][1]:#case 3：included in right
             #same as 'up'
             prevTrait = currentTrait
             currentTrait = nextTrait
